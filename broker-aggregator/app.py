@@ -5,9 +5,7 @@ from urllib.request import urlopen
 
 app = Flask(__name__)
 
-# -----------------------------
-# Load broker calls from CSV file at startup
-# -----------------------------
+## Load broker calls from CSV file at startup
 def load_broker_calls_from_csv(path: str):
     calls = []
     with open(path, newline="", encoding="utf-8") as f:
