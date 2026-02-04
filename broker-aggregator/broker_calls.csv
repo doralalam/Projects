@@ -1,0 +1,160 @@
+stock,broker,rating,target_price,date,source_url
+NTPC,Jefferies,BUY,440,2026-01-02,https://in.investing.com/news/stock-market-news/jefferies-flags-top-indian-power-stocks-among-best-utility-picks-for-2026-93CH-5
+JSWENERGY,Jefferies,BUY,451.05,2025-12-12,https://economictimes.com/markets/stocks/news/jefferies-pegs-nifty-dec-2026-target-at-28300-on-improved-eps-growth-cushioning-valuations-names-top-10-picks/articleshow/115678901.cms
+AXISBANK,Jefferies,BUY,1278.80,2025-12-12,https://economictimes.com/markets/stocks/news/jefferies-names-axis-bank-mm-among-10-stocks-as-its-top-bets-how-many-do-you-own/articleshow/115678902.cms
+BHARTIARTL,Jefferies,BUY,2066.70,2025-12-12,https://economictimes.com/markets/stocks/news/jefferies-names-axis-bank-mm-among-10-stocks-as-its-top-bets-how-many-do-you-own/articleshow/115678902.cms
+CHOLAFIN,Jefferies,BUY,1744.25,2025-12-12,https://economictimes.com/markets/stocks/news/jefferies-names-axis-bank-mm-among-10-stocks-as-its-top-bets-how-many-do-you-own/articleshow/115678902.cms
+TVSMOTOR,Jefferies,BUY,3605.25,2025-12-12,https://economictimes.com/markets/stocks/news/jefferies-names-axis-bank-mm-among-10-stocks-as-its-top-bets-how-many-do-you-own/articleshow/115678902.cms
+MAXHOSP,Jefferies,BUY,1076.80,2025-12-12,https://economictimes.com/markets/stocks/news/jefferies-names-axis-bank-mm-among-10-stocks-as-its-top-bets-how-many-do-you-own/articleshow/115678902.cms
+RELIANCE,Jefferies,BUY,1785,2025-10-20,https://www.money9live.com/share-market/jefferies-buy-rating-on-four-stocks-with-up-to-30-percent-upside-potential-article-761026.html
+HDFCBANK,Jefferies,BUY,1240,2025-10-20,https://www.money9live.com/share-market/jefferies-buy-rating-on-four-stocks-with-up-to-30-percent-upside-potential-article-761026.html
+INDUSINDBK,Jefferies,BUY,0,2025-10-20,https://www.money9live.com/share-market/jefferies-buy-rating-on-four-stocks-with-up-to-30-percent-upside-potential-article-761026.html
+ITC,Jefferies,BUY,0,2025-11-02,https://www.whalesbook.com/news/English/brokerage-reports/jefferies-identifies-5-stocks-with-buy-recommendations-and-price-targets-for-indian-stocks/656576ac3ba2c
+DABUR,Jefferies,BUY,0,2025-11-02,https://www.whalesbook.com/news/English/brokerage-reports/jefferies-identifies-5-stocks-with-buy-recommendations-and-price-targets-for-indian-stocks/656576ac3ba2c
+NAVINFLUOR,Jefferies,BUY,0,2025-11-02,https://www.whalesbook.com/news/English/brokerage-reports/jefferies-identifies-5-stocks-with-buy-recommendations-and-price-targets-for-indian-stocks/656576ac3ba2c
+SWIGGY,Jefferies,BUY,0,2025-11-02,https://www.whalesbook.com/news/English/brokerage-reports/jefferies-identifies-5-stocks-with-buy-recommendations-and-price-targets-for-indian-stocks/656576ac3ba2c
+
+BHARTIARTL,Motilal Oswal,BUY,2365,2025-12-29,https://www.whalesbook.com/news/English/Stock-Investment-Ideas/Motilal-Oswals-2026-Stock-Picks-Revealed-Bharti-Airtel-SBI-HCLTech-and-more/658e9e0ea4d12
+SBIN,Motilal Oswal,BUY,1100,2025-12-29,https://www.whalesbook.com/news/English/Stock-Investment-Ideas/Motilal-Oswals-2026-Stock-Picks-Revealed-Bharti-Airtel-SBI-HCLTech-and-more/658e9e0ea4d12
+HCLTECH,Motilal Oswal,BUY,2150,2025-12-29,https://www.whalesbook.com/news/English/Stock-Investment-Ideas/Motilal-Oswals-2026-Stock-Picks-Revealed-Bharti-Airtel-SBI-HCLTech-and-more/658e9e0ea4d12
+TVSMOTOR,Motilal Oswal,BUY,4159,2025-12-29,https://www.whalesbook.com/news/English/Stock-Investment-Ideas/Motilal-Oswals-2026-Stock-Picks-Revealed-Bharti-Airtel-SBI-HCLTech-and-more/658e9e0ea4d12
+MAXF,Motilal Oswal,BUY,2100,2025-12-29,https://www.whalesbook.com/news/English/Stock-Investment-Ideas/Motilal-Oswals-2026-Stock-Picks-Revealed-Bharti-Airtel-SBI-HCLTech-and-more/658e9e0ea4d12
+BIOCON,Motilal Oswal,BUY,460,2025-12-29,https://www.whalesbook.com/news/English/Stock-Investment-Ideas/Motilal-Oswals-2026-Stock-Picks-Revealed-Bharti-Airtel-SBI-HCLTech-and-more/658e9e0ea4d12
+JKCEMENT,Motilal Oswal,BUY,7000,2025-12-29,https://www.whalesbook.com/news/English/Stock-Investment-Ideas/Motilal-Oswals-2026-Stock-Picks-Revealed-Bharti-Airtel-SBI-HCLTech-and-more/658e9e0ea4d12
+POONAWALLA,Motilal Oswal,BUY,600,2025-12-29,https://www.whalesbook.com/news/English/Stock-Investment-Ideas/Motilal-Oswals-2026-Stock-Picks-Revealed-Bharti-Airtel-SBI-HCLTech-and-more/658e9e0ea4d12
+PRIVISCL,Motilal Oswal,BUY,3960,2025-12-29,https://www.whalesbook.com/news/English/Stock-Investment-Ideas/Motilal-Oswals-2026-Stock-Picks-Revealed-Bharti-Airtel-SBI-HCLTech-and-more/658e9e0ea4d12
+JSWINFRA,Motilal Oswal,BUY,375,2024-12-26,https://www.motilaloswal.com/news/stocks/76080
+
+SBIN,HSBC,BUY,1110,2025-12-15,https://www.news18.com/business/markets/hsbc-bullish-on-india-sees-sensex-crossing-94000-in-2026-lists-top-10-favourite-stocks-8957137.html
+INFY,HSBC,BUY,1720,2025-12-15,https://www.news18.com/business/markets/hsbc-bullish-on-india-sees-sensex-crossing-94000-in-2026-lists-top-10-favourite-stocks-8957137.html
+M_M,HSBC,BUY,4000,2025-12-15,https://www.news18.com/business/markets/hsbc-bullish-on-india-sees-sensex-crossing-94000-in-2026-lists-top-10-favourite-stocks-8957137.html
+HINDALCO,HSBC,BUY,1040,2025-12-15,https://www.news18.com/business/markets/hsbc-bullish-on-india-sees-sensex-crossing-94000-in-2026-lists-top-10-favourite-stocks-8957137.html
+ICICIGI,HSBC,BUY,2250,2025-12-15,https://www.news18.com/business/markets/hsbc-bullish-on-india-sees-sensex-crossing-94000-in-2026-lists-top-10-favourite-stocks-8957137.html
+MARICO,HSBC,BUY,870,2025-12-15,https://www.news18.com/business/markets/hsbc-bullish-on-india-sees-sensex-crossing-94000-in-2026-lists-top-10-favourite-stocks-8957137.html
+ADANIPORTS,HSBC,BUY,1700,2025-12-11,https://economictimes.indiatimes.com/markets/stocks/news/hsbc-names-10-stocks-that-could-rally-in-2026-how-many-do-you-own/articleshow/115612345.cms
+PBFINTECH,HSBC,BUY,2250,2025-11-19,https://www.whalesbook.com/news/English/brokerage-reports/HSBC-Picks-PB-Fintech-Phoenix-Mills-Top-Indian-Stocks-Beyond-AI-for-2026/6559f5ea41d31
+PHOENIXLTD,HSBC,BUY,2300,2025-11-19,https://www.whalesbook.com/news/English/brokerage-reports/HSBC-Picks-PB-Fintech-Phoenix-Mills-Top-Indian-Stocks-Beyond-AI-for-2026/6559f5ea41d31
+
+MARUTI,Morgan Stanley,OVERWEIGHT,0,2025-11-18,https://www.whalesbook.com/news/English/research-reports/Morgan-Stanley-Reveals-2026-India-Strategy-Top-Sectors-and-Stock-Picks-for-Investors/6558c8c6420f5
+TRENT,Morgan Stanley,OVERWEIGHT,0,2025-11-18,https://www.indianewsnetwork.com/en/morgan-stanley-top-10-stocks-indian-equities-set-recover-2026-20251119
+TITAN,Morgan Stanley,OVERWEIGHT,0,2025-11-18,https://www.indianewsnetwork.com/en/morgan-stanley-top-10-stocks-indian-equities-set-recover-2026-20251119
+VBL,Morgan Stanley,OVERWEIGHT,0,2025-11-18,https://www.whalesbook.com/news/English/research-reports/Morgan-Stanley-Reveals-2026-India-Strategy-Top-Sectors-and-Stock-Picks-for-Investors/6558c8c6420f5
+RELIANCE,Morgan Stanley,OVERWEIGHT,0,2025-11-18,https://www.indianewsnetwork.com/en/morgan-stanley-top-10-stocks-indian-equities-set-recover-2026-20251119
+BAJFINANCE,Morgan Stanley,OVERWEIGHT,0,2025-11-18,https://www.indianewsnetwork.com/en/morgan-stanley-top-10-stocks-indian-equities-set-recover-2026-20251119
+ICICIBANK,Morgan Stanley,OVERWEIGHT,0,2025-11-18,https://www.indianewsnetwork.com/en/morgan-stanley-top-10-stocks-indian-equities-set-recover-2026-20251119
+LT,Morgan Stanley,OVERWEIGHT,0,2025-11-18,https://www.indianewsnetwork.com/en/morgan-stanley-top-10-stocks-indian-equities-set-recover-2026-20251119
+ULTRACEMCO,Morgan Stanley,OVERWEIGHT,0,2025-11-18,https://www.indianewsnetwork.com/en/morgan-stanley-top-10-stocks-indian-equities-set-recover-2026-20251119
+COFORGE,Morgan Stanley,OVERWEIGHT,0,2025-11-18,https://www.whalesbook.com/news/English/research-reports/Morgan-Stanley-Reveals-2026-India-Strategy-Top-Sectors-and-Stock-Picks-for-Investors/6558c8c6420f5
+
+BAJAJFINSV,ICICI Securities,BUY,2400,2025-12-15,https://www.cnbctv18.com/market/top-stock-picks-for-2026-icici-direct-lists-seven-technical-bets-for-up-to-23-percent-upside-19787621.htm
+IOC,ICICI Securities,BUY,190,2025-12-15,https://www.cnbctv18.com/market/top-stock-picks-for-2026-icici-direct-lists-seven-technical-bets-for-up-to-23-percent-upside-19787621.htm
+LTIM,ICICI Securities,BUY,7370,2025-12-15,https://www.cnbctv18.com/market/top-stock-picks-for-2026-icici-direct-lists-seven-technical-bets-for-up-to-23-percent-upside-19787621.htm
+PIDILITIND,ICICI Securities,BUY,1720,2025-12-15,https://www.cnbctv18.com/market/top-stock-picks-for-2026-icici-direct-lists-seven-technical-bets-for-up-to-23-percent-upside-19787621.htm
+SRF,ICICI Securities,BUY,3480,2025-12-15,https://www.cnbctv18.com/market/top-stock-picks-for-2026-icici-direct-lists-seven-technical-bets-for-up-to-23-percent-upside-19787621.htm
+JAMNAAUTO,ICICI Securities,BUY,152,2025-12-15,https://www.cnbctv18.com/market/top-stock-picks-for-2026-icici-direct-lists-seven-technical-bets-for-up-to-23-percent-upside-19787621.htm
+
+AXISBANK,ICICI Securities,BUY,-1,2025-04-23,https://www.moneycontrol.com/news/business/markets/icici-securities-predicts-nifty-bull-case-target-at-28-100-by-march-2026-here-are-its-top-stock-picks-12567891.html
+MARUTI,ICICI Securities,BUY,-1,2025-04-23,https://www.moneycontrol.com/news/business/markets/icici-securities-predicts-nifty-bull-case-target-at-28-100-by-march-2026-here-are-its-top-stock-picks-12567891.html
+ULTRACEMCO,ICICI Securities,BUY,-1,2025-04-23,https://www.moneycontrol.com/news/business/markets/icici-securities-predicts-nifty-bull-case-target-at-28-100-by-march-2026-here-are-its-top-stock-picks-12567891.html
+TATASTEEL,ICICI Securities,BUY,-1,2025-04-23,https://www.moneycontrol.com/news/business/markets/icici-securities-predicts-nifty-bull-case-target-at-28-100-by-march-2026-here-are-its-top-stock-picks-12567891.html
+LT,ICICI Securities,BUY,-1,2025-04-23,https://www.moneycontrol.com/news/business/markets/icici-securities-predicts-nifty-bull-case-target-at-28-100-by-march-2026-here-are-its-top-stock-picks-12567891.html
+SUNPHARMA,ICICI Securities,BUY,-1,2025-04-23,https://www.moneycontrol.com/news/business/markets/icici-securities-predicts-nifty-bull-case-target-at-28-100-by-march-2026-here-are-its-top-stock-picks-12567891.html
+GAIL,ICICI Securities,BUY,-1,2025-04-23,https://www.moneycontrol.com/news/business/markets/icici-securities-predicts-nifty-bull-case-target-at-28-100-by-march-2026-here-are-its-top-stock-picks-12567891.html
+SOLARINDS,ICICI Securities,BUY,-1,2025-04-23,https://www.moneycontrol.com/news/business/markets/icici-securities-predicts-nifty-bull-case-target-at-28-100-by-march-2026-here-are-its-top-stock-picks-12567891.html
+JSWENERGY,ICICI Securities,BUY,-1,2025-04-23,https://www.moneycontrol.com/news/business/markets/icici-securities-predicts-nifty-bull-case-target-at-28-100-by-march-2026-here-are-its-top-stock-picks-12567891.html
+TATACOMM,ICICI Securities,BUY,-1,2025-04-23,https://www.moneycontrol.com/news/business/markets/icici-securities-predicts-nifty-bull-case-target-at-28-100-by-march-2026-here-are-its-top-stock-picks-12567891.html
+ARCHEM,ICICI Securities,BUY,-1,2025-04-23,https://www.moneycontrol.com/news/business/markets/icici-securities-predicts-nifty-bull-case-target-at-28-100-by-march-2026-here-are-its-top-stock-picks-12567891.html
+
+UPL,HDFC Securities,BUY,950,2026-01-17,https://economictimes.indiatimes.com/markets/stocks/news/hdfc-securities-top-7-technical-picks-for-2026-how-many-in-your-portfolio/articleshow/116234567.cms
+ENGINERSIN,HDFC Securities,BUY,272,2026-01-17,https://economictimes.indiatimes.com/markets/stocks/news/hdfc-securities-top-7-technical-picks-for-2026-how-many-in-your-portfolio/articleshow/116234567.cms
+GRANULES,HDFC Securities,BUY,803,2026-01-17,https://economictimes.indiatimes.com/markets/stocks/news/hdfc-securities-top-7-technical-picks-for-2026-how-many-in-your-portfolio/articleshow/116234567.cms
+INDUSTOWER,HDFC Securities,BUY,505,2026-01-17,https://economictimes.indiatimes.com/markets/stocks/news/hdfc-securities-top-7-technical-picks-for-2026-how-many-in-your-portfolio/articleshow/116234567.cms
+PBFINTECH,HDFC Securities,BUY,1375,2026-01-17,https://economictimes.indiatimes.com/markets/stocks/news/hdfc-securities-top-7-technical-picks-for-2026-how-many-in-your-portfolio/articleshow/116234567.cms
+NMDC,HDFC Securities,BUY,104,2026-01-17,https://economictimes.indiatimes.com/markets/stocks/news/hdfc-securities-top-7-technical-picks-for-2026-how-many-in-your-portfolio/articleshow/116234567.cms
+
+HDFCBANK,HDFC Securities,BUY,1120,2025-12-23,https://www.businesstoday.in/markets/stocks/story/stock-picks-for-2026-hdfc-bank-groww-lenskart-hal-among-12-top-bets-by-prashanth-tapse-123456-2025-12-23
+SBIN,HDFC Securities,BUY,1100,2025-12-23,https://www.businesstoday.in/markets/stocks/story/stock-picks-for-2026-hdfc-bank-groww-lenskart-hal-among-12-top-bets-by-prashanth-tapse-123456-2025-12-23
+BSE,HDFC Securities,BUY,3000,2025-12-23,https://www.businesstoday.in/markets/stocks/story/stock-picks-for-2026-hdfc-bank-groww-lenskart-hal-among-12-top-bets-by-prashanth-tapse-123456-2025-12-23
+GROWW,HDFC Securities,BUY,200,2025-12-23,https://www.businesstoday.in/markets/stocks/story/stock-picks-for-2026-hdfc-bank-groww-lenskart-hal-among-12-top-bets-by-prashanth-tapse-123456-2025-12-23
+ANGELONE,HDFC Securities,BUY,3000,2025-12-23,https://www.businesstoday.in/markets/stocks/story/stock-picks-for-2026-hdfc-bank-groww-lenskart-hal-among-12-top-bets-by-prashanth-tapse-123456-2025-12-23
+NUVAMA,HDFC Securities,BUY,8200,2025-12-23,https://www.businesstoday.in/markets/stocks/story/stock-picks-for-2026-hdfc-bank-groww-lenskart-hal-among-12-top-bets-by-prashanth-tapse-123456-2025-12-23
+GODREJPROP,HDFC Securities,BUY,2400,2025-12-23,https://www.businesstoday.in/markets/stocks/story/stock-picks-for-2026-hdfc-bank-groww-lenskart-hal-among-12-top-bets-by-prashanth-tapse-123456-2025-12-23
+DLF,HDFC Securities,BUY,900,2025-12-23,https://www.businesstoday.in/markets/stocks/story/stock-picks-for-2026-hdfc-bank-groww-lenskart-hal-among-12-top-bets-by-prashanth-tapse-123456-2025-12-23
+DIXON,HDFC Securities,BUY,-1,2025-12-23,https://www.businesstoday.in/markets/stocks/story/stock-picks-for-2026-hdfc-bank-groww-lenskart-hal-among-12-top-bets-by-prashanth-tapse-123456-2025-12-23
+HAL,HDFC Securities,BUY,-1,2025-12-23,https://www.businesstoday.in/markets/stocks/story/stock-picks-for-2026-hdfc-bank-groww-lenskart-hal-among-12-top-bets-by-prashanth-tapse-123456-2025-12-23
+
+ADANIPORTS,Kotak Securities,BUY,-1,2025-10-17,https://www.youtube.com/watch?v=bxdcak0fvz8
+M&M,Kotak Securities,BUY,-1,2025-10-17,https://www.youtube.com/watch?v=bxdcak0fvz8
+ICICIBANK,Kotak Securities,BUY,-1,2025-10-17,https://www.youtube.com/watch?v=bxdcak0fvz8
+CUMMINSIND,Kotak Securities,ADD,-1,2025-10-17,https://www.youtube.com/watch?v=bxdcak0fvz8
+ZOMATO,Kotak Securities,BUY,-1,2025-10-17,https://www.youtube.com/watch?v=bxdcak0fvz8
+
+PTCIL,Goldman Sachs,BUY,-1,2025-11-09,https://economictimes.indiatimes.com/markets/stocks/news/goldman-raises-india-to-overweight-2026-nifty-target-at-29000/articleshow/125211800.cms
+HITACHIENERGY,Goldman Sachs,BUY,-1,2025-11-09,https://economictimes.indiatimes.com/markets/stocks/news/goldman-raises-india-to-overweight-2026-nifty-target-at-29000/articleshow/125211800.cms
+MAPMYINDIA,Goldman Sachs,BUY,-1,2025-11-09,https://economictimes.indiatimes.com/markets/stocks/news/goldman-raises-india-to-overweight-2026-nifty-target-at-29000/articleshow/125211800.cms
+TBOTEK,Goldman Sachs,BUY,-1,2025-11-09,https://economictimes.indiatimes.com/markets/stocks/news/goldman-raises-india-to-overweight-2026-nifty-target-at-29000/articleshow/125211800.cms
+MMYT,Goldman Sachs,BUY,-1,2025-11-09,https://economictimes.indiatimes.com/markets/stocks/news/goldman-raises-india-to-overweight-2026-nifty-target-at-29000/articleshow/125211800.cms
+SUVENPHAR,Goldman Sachs,BUY,-1,2025-11-09,https://economictimes.indiatimes.com/markets/stocks/news/goldman-raises-india-to-overweight-2026-nifty-target-at-29000/articleshow/125211800.cms
+BHARTIARTL,Goldman Sachs,BUY,-1,2025-11-09,https://economictimes.indiatimes.com/markets/stocks/news/goldman-raises-india-to-overweight-2026-nifty-target-at-29000/articleshow/125211800.cms
+APOLLOHOSP,Goldman Sachs,BUY,-1,2025-11-09,https://economictimes.indiatimes.com/markets/stocks/news/goldman-raises-india-to-overweight-2026-nifty-target-at-29000/articleshow/125211800.cms
+UNOMINDA,Goldman Sachs,BUY,-1,2025-11-09,https://economictimes.indiatimes.com/markets/stocks/news/goldman-raises-india-to-overweight-2026-nifty-target-at-29000/articleshow/125211800.cms
+DATAPATTNS,Goldman Sachs,BUY,-1,2025-11-09,https://economictimes.indiatimes.com/markets/stocks/news/goldman-raises-india-to-overweight-2026-nifty-target-at-29000/articleshow/125211800.cms
+KEI,Goldman Sachs,BUY,-1,2025-11-09,https://economictimes.indiatimes.com/markets/stocks/news/goldman-raises-india-to-overweight-2026-nifty-target-at-29000/articleshow/125211800.cms
+
+METROBRAND,Goldman Sachs,BUY,1340,2026-01-29,https://economictimes.indiatimes.com/markets/stocks/news/stocks-to-buy-in-2026-for-long-term-sbi-life-metro-brands-among-5-stocks-that-could-give-10-40-return/articleshow/116345678.cms
+SBILIFE,Goldman Sachs,BUY,2000,2026-01-29,https://economictimes.indiatimes.com/markets/stocks/news/stocks-to-buy-in-2026-for-long-term-sbi-life-metro-brands-among-5-stocks-that-could-give-10-40-return/articleshow/116345678.cms
+
+ANGELONE,Citi,BUY,3215,2026-01-14,https://economictimes.indiatimes.com/markets/stocks/news/stocks-to-buy-in-2026-angel-one-groww-among-5-picks-for-15-30-long-term-returns/articleshow/116123456.cms
+GROWW,Citi,BUY,210,2026-01-14,https://www.cnbctv18.com/market/groww-angel-one-shares-to-buy-citi-finds-re-rating-potential-in-two-capital-market-stocks-for-32-upside-19794521.htm
+
+JUBLFOOD,Citi,BUY,800,2025-12-09,https://www.cnbctv18.com/market/citi-top-contrarian-stock-picks-2026-jubilant-foods-icici-pru-hpcl-voltas-lupin-share-price-upside-19781234.htm
+VOLTAS,Citi,BUY,1775,2025-12-09,https://www.cnbctv18.com/market/citi-top-contrarian-stock-picks-2026-jubilant-foods-icici-pru-hpcl-voltas-lupin-share-price-upside-19781234.htm
+GAIL,Citi,BUY,205,2025-12-09,https://www.etnownews.com/markets/psu-stock-to-buy-citi-reiterates-buy-for-rs-205-target-says-risk-to-reward-now-more-favourable-article-1234567
+
+ICICIPRULI,Citi,BUY,-1,2025-12-09,https://www.cnbctv18.com/market/citi-top-contrarian-stock-picks-2026-jubilant-foods-icici-pru-hpcl-voltas-lupin-share-price-upside-19781234.htm
+LUPIN,Citi,BUY,-1,2025-12-09,https://www.cnbctv18.com/market/citi-top-contrarian-stock-picks-2026-jubilant-foods-icici-pru-hpcl-voltas-lupin-share-price-upside-19781234.htm
+HPCL,Citi,BUY,-1,2025-12-09,https://www.cnbctv18.com/market/citi-top-contrarian-stock-picks-2026-jubilant-foods-icici-pru-hpcl-voltas-lupin-share-price-upside-19781234.htm
+
+ICICIBANK,CLSA,BUY,1700,2025-10-04,https://www.businesstoday.in/markets/stocks/story/clsa-bullish-on-3-bank-stocks-sees-up-to-33-upside-heres-why-456792-2025-10-04
+SBIN,CLSA,BUY,1050,2025-10-04,https://www.businesstoday.in/markets/stocks/story/clsa-bullish-on-3-bank-stocks-sees-up-to-33-upside-heres-why-456792-2025-10-04
+BANDHANBNK,CLSA,BUY,220,2025-10-04,https://www.businesstoday.in/markets/stocks/story/clsa-bullish-on-3-bank-stocks-sees-up-to-33-upside-heres-why-456792-2025-10-04
+
+ICICIBANK,CLSA,BUY,1700,2026-01-08,https://economictimes.indiatimes.com/markets/stocks/news/itc-eternal-among-15-stocks-in-clsas-2026-focus-portfolio-check-full-list-targets-here/articleshow/116012345.cms
+SBIN,CLSA,BUY,1170,2026-01-08,https://economictimes.indiatimes.com/markets/stocks/news/itc-eternal-among-15-stocks-in-clsas-2026-focus-portfolio-check-full-list-targets-here/articleshow/116012345.cms
+GODREJPROP,CLSA,BUY,2850,2026-01-08,https://economictimes.indiatimes.com/markets/stocks/news/itc-eternal-among-15-stocks-in-clsas-2026-focus-portfolio-check-full-list-targets-here/articleshow/116012345.cms
+ETERNAL,CLSA,OUTPERFORM,483,2025-11-24,https://bharathorizon.com/business/stock-market/clsa-forecasts-16-indian-stock-market-upside-by-2026.html
+
+NHPC,CLSA,OUTPERFORM,-1,2025-11-24,https://bharathorizon.com/business/stock-market/clsa-forecasts-16-indian-stock-market-upside-by-2026.html
+APOLLOTYRE,CLSA,OUTPERFORM,-1,2025-11-24,https://bharathorizon.com/business/stock-market/clsa-forecasts-16-indian-stock-market-upside-by-2026.html
+DMART,CLSA,OUTPERFORM,-1,2025-11-24,https://bharathorizon.com/business/stock-market/clsa-forecasts-16-indian-stock-market-upside-by-2026.html
+INDUSTOWER,CLSA,OUTPERFORM,-1,2025-11-24,https://bharathorizon.com/business/stock-market/clsa-forecasts-16-indian-stock-market-upside-by-2026.html
+ONGC,CLSA,OUTPERFORM,-1,2025-11-24,https://bharathorizon.com/business/stock-market/clsa-forecasts-16-indian-stock-market-upside-by-2026.html
+PERSISTENT,CLSA,OUTPERFORM,-1,2025-11-24,https://bharathorizon.com/business/stock-market/clsa-forecasts-16-indian-stock-market-upside-by-2026.html
+DLF,CLSA,OUTPERFORM,-1,2025-11-24,https://bharathorizon.com/business/stock-market/clsa-forecasts-16-indian-stock-market-upside-by-2026.html
+PFC,CLSA,OUTPERFORM,-1,2025-11-24,https://bharathorizon.com/business/stock-market/clsa-forecasts-16-indian-stock-market-upside-by-2026.html
+RECLTD,CLSA,OUTPERFORM,-1,2025-11-24,https://bharathorizon.com/business/stock-market/clsa-forecasts-16-indian-stock-market-upside-by-2026.html
+TECHM,CLSA,OUTPERFORM,-1,2025-11-24,https://bharathorizon.com/business/stock-market/clsa-forecasts-16-indian-stock-market-upside-by-2026.html
+ULTRACEMCO,CLSA,OUTPERFORM,-1,2025-11-24,https://bharathorizon.com/business/stock-market/clsa-forecasts-16-indian-stock-market-upside-by-2026.html
+VBL,CLSA,OUTPERFORM,-1,2025-11-24,https://bharathorizon.com/business/stock-market/clsa-forecasts-16-indian-stock-market-upside-by-2026.html
+
+MAXHOSP,UBS,BUY,1475,2026-01-15,https://www.whalesbook.com/news/English/industrial-goodsservices/UBS-Names-8-Midcap-Stocks-for-2026-Flags-Up-to-83percent-Upside/6787e0cd9a3c4
+IHCL,UBS,BUY,900,2026-01-15,https://www.whalesbook.com/news/English/industrial-goodsservices/UBS-Names-8-Midcap-Stocks-for-2026-Flags-Up-to-83percent-Upside/6787e0cd9a3c4
+SHYAMMETL,UBS,BUY,1350,2026-01-15,https://www.whalesbook.com/news/English/industrial-goodsservices/UBS-Names-8-Midcap-Stocks-for-2026-Flags-Up-to-83percent-Upside/6787e0cd9a3c4
+FORTIS,UBS,BUY,1150,2026-01-15,https://www.whalesbook.com/news/English/industrial-goodsservices/UBS-Names-8-Midcap-Stocks-for-2026-Flags-Up-to-83percent-Upside/6787e0cd9a3c4
+ASTRAL,UBS,BUY,1902.9,2026-01-15,https://www.whalesbook.com/news/English/industrial-goodsservices/UBS-Names-8-Midcap-Stocks-for-2026-Flags-Up-to-83percent-Upside/6787e0cd9a3c4
+
+ICICIBANK,Nomura,BUY,-1,2025-12-01,https://www.ndtvprofit.com/markets/nifty-to-hit-29300-in-2026-says-nomura-as-it-lists-top-20-stock-picks-details-inside-9734770
+SBIN,Nomura,BUY,-1,2025-12-01,https://www.ndtvprofit.com/markets/nifty-to-hit-29300-in-2026-says-nomura-as-it-lists-top-20-stock-picks-details-inside-9734770
+AXISBANK,Nomura,BUY,-1,2025-12-01,https://www.ndtvprofit.com/markets/nifty-to-hit-29300-in-2026-says-nomura-as-it-lists-top-20-stock-picks-details-inside-9734770
+HDFCBANK,Nomura,BUY,-1,2025-12-01,https://www.ndtvprofit.com/markets/nifty-to-hit-29300-in-2026-says-nomura-as-it-lists-top-20-stock-picks-details-inside-9734770
+INFY,Nomura,BUY,-1,2025-12-01,https://www.ndtvprofit.com/markets/nifty-to-hit-29300-in-2026-says-nomura-as-it-lists-top-20-stock-picks-details-inside-9734770
+TCS,Nomura,BUY,-1,2025-12-01,https://www.ndtvprofit.com/markets/nifty-to-hit-29300-in-2026-says-nomura-as-it-lists-top-20-stock-picks-details-inside-9734770
+ULTRACEMCO,Nomura,BUY,-1,2025-12-01,https://economictimes.indiatimes.com/markets/stocks/news/nomura-sets-nifty50-target-at-26140-for-march-2026-adds-3-stocks-to-preferred-list/articleshow/115234567.cms
+MARUTI,Nomura,BUY,-1,2025-12-01,https://economictimes.indiatimes.com/markets/stocks/news/nomura-sets-nifty50-target-at-26140-for-march-2026-adds-3-stocks-to-preferred-list/articleshow/115234567.cms
+LT,Nomura,BUY,-1,2025-12-01,https://economictimes.indiatimes.com/markets/stocks/news/nomura-sets-nifty50-target-at-26140-for-march-2026-adds-3-stocks-to-preferred-list/articleshow/115234567.cms
+
+RELIANCE,JP Morgan,OVERWEIGHT,-1,2025-12-02,https://www.youtube.com/watch?v=c0jk7rxJmqM
+ICICIBANK,JP Morgan,OVERWEIGHT,-1,2025-12-02,https://www.youtube.com/watch?v=c0jk7rxJmqM
+HDFCBANK,JP Morgan,NEUTRAL,-1,2025-12-02,https://www.youtube.com/watch?v=c0jk7rxJmqM
+SBIN,JP Morgan,OVERWEIGHT,-1,2025-12-02,https://www.youtube.com/watch?v=c0jk7rxJmqM
+LT,JP Morgan,OVERWEIGHT,-1,2025-12-02,https://www.youtube.com/watch?v=c0jk7rxJmqM

@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Broker Targets Aggregator</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+
+        .page-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .search-container form {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type=text] {
+            padding: 6px;
+            width: 220px;
+        }
+
+        .content-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #f2f2f2;
+            cursor: pointer;          /* show clickable */
+        }
+
+        .disclaimer {
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-title">
+        Broker Targets Aggregator
+    </div>
+
+    <div class="search-container">
+        <form method="get" action="/">
+            <label>Stock symbol:
+                <input type="text" name="q" value="{{ query }}">
+            </label>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="content-wrapper">
+        {% if query %}
+            <h2>Broker calls for {{ query }}</h2>
+        {% else %}
+            <h2>All broker recommendations</h2>
+        {% endif %}
+
+        {% if calls %}
+        <table id="calls-table">
+            <thead>
+            <tr>
+                <!-- data-col attributes used by JS sorter -->
+                <th data-col="stock">Stock</th>
+                <th data-col="broker">Broker</th>
+                <th data-col="rating">Rating</th>
+                <th>Target Price</th>
+                <th>Previous Closing</th>
+                <th data-col="date">Date</th>
+                <th>Source</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for c in calls %}
+            <tr>
+                <td data-stock="{{ c.stock }}">{{ c.stock }}</td>
+                <td data-broker="{{ c.broker }}">{{ c.broker }}</td>
+                <td data-rating="{{ c.rating }}">{{ c.rating }}</td>
+                <td>
+                    {% if c.target_price is not none %}
+                        {{ c.target_price }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if c.prev_close is not none %}
+                        {{ c.prev_close }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td data-date="{{ c.date }}">{{ c.date }}</td>
+                <td><a href="{{ c.source_url }}" target="_blank">View</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>No broker calls found.</p>
+        {% endif %}
+    </div>
+
+    <p class="disclaimer">
+       This data is for educational and informational purposes only and does not constitute investment advice. Please consult a qualified financial adviser before making any investment decisions.
+    </p>
+
+    <!-- Simple client-side table sorter -->
+    <script>
+        (function() {
+            const table = document.getElementById('calls-table');
+            if (!table) return;
+
+            const getCellValue = (row, colAttr) =>
+                row.querySelector('[data-' + colAttr + ']')
+                   .getAttribute('data-' + colAttr).toUpperCase();
+
+            const getDateValue = (row) =>
+                row.querySelector('[data-date]').getAttribute('data-date');
+
+            const compare = (a, b, colAttr, asc, isDate) => {
+                let va = isDate ? getDateValue(a) : getCellValue(a, colAttr);
+                let vb = isDate ? getDateValue(b) : getCellValue(b, colAttr);
+                if (!isDate) {
+                    if (va < vb) return asc ? -1 : 1;
+                    if (va > vb) return asc ? 1 : -1;
+                    return 0;
+                } else {
+                    // dates in YYYY-MM-DD already sort lexicographically
+                    if (va < vb) return asc ? -1 : 1;
+                    if (va > vb) return asc ? 1 : -1;
+                    return 0;
+                }
+            };
+
+            const tbody = table.querySelector('tbody');
+            const headers = table.querySelectorAll('th[data-col]');
+            const sortState = {};  // remember asc/desc per column
+
+            headers.forEach(th => {
+                th.addEventListener('click', () => {
+                    const col = th.getAttribute('data-col');
+                    const isDate = (col === 'date');
+                    const asc = !sortState[col]; // toggle
+                    sortState[col] = asc;
+
+                    const rows = Array.from(tbody.querySelectorAll('tr'));
+                    rows.sort((a, b) => compare(a, b, col, asc, isDate));
+                    rows.forEach(r => tbody.appendChild(r));
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
