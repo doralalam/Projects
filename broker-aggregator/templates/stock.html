@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Broker Calls for {{ symbol }}</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        table { border-collapse: collapse; margin-top: 20px; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #f2f2f2; }
+        a { color: #0066cc; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <h1>Broker Calls for {{ symbol }}</h1>
+
+    <p><a href="/">← Back to search</a></p>
+
+    {% if not calls %}
+        <p>No broker calls found for <strong>{{ symbol }}</strong>.</p>
+    {% else %}
+    <table>
+        <tr>
+            <th>Broker</th>
+            <th>Rating</th>
+            <th>Target Price</th>
+            <th>Date</th>
+            <th>Source</th>
+        </tr>
+        {% for c in calls %}
+        <tr>
+            <td>{{ c.broker }}</td>
+            <td>{{ c.rating }}</td>
+            <td>
+                {% if c.target_price is not none %}
+                    {{ c.target_price }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td>{{ c.date }}</td>
+            <td><a href="{{ c.source_url }}" target="_blank">View</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    <p style="margin-top:40px;font-size:0.9em;color:#666;">
+        Data loaded from local CSV. Demo only.
+    </p>
+</body>
+</html>
