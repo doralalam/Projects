@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Broker Targets Aggregator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="/">Home</a>
+        <a href="/ratings">Broker Ratings</a>
+        <a href="/brokers">Brokers</a>
+    </div>
+
+
+    <div class="page-title">
+        Broker Targets Aggregator
+    </div>
+
+    <div class="search-container">
+        <form method="get" action="/search">
+            <label>Stock symbol:
+                <input type="text" name="q" value="{{ query }}">
+            </label>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="content-wrapper">
+        {% if query %}
+            <h2>Broker calls for {{ query }}</h2>
+        {% else %}
+            <h2>Brokerage Ratings</h2>
+        {% endif %}
+
+        {% if calls %}
+        <table id="calls-table">
+            <thead>
+            <tr>
+                <!-- data-col attributes used by JS sorter -->
+                <th data-col="stock">Stock</th>
+                <th data-col="broker">Broker</th>
+                <th data-col="rating">Rating</th>
+                <th>Target Price</th>
+                <th>Last Closing Price</th>
+                <th data-col="date">Date</th>
+                <th>Source</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for c in calls %}
+            <tr>
+                <td data-stock="{{ c.stock }}"><a href="/stock/{{ c.stock }}">{{ c.stock }}</a></td>
+                <td data-broker="{{ c.broker }}"><a href="/broker/{{ c.broker }}">{{ c.broker }}</a></td>
+                <td data-rating="{{ c.rating }}">{{ c.rating }}</td>
+                <td>
+                    {% if c.target_price is not none %}
+                        {{ c.target_price }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td data-previous_close="{{ c.previous_price }}">
+                    {% if c.previous_price is not none %}
+                        {{ c.previous_price }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+
+                <td data-date="{{ c.date }}">{{ c.date }}</td>
+                <td><a href="{{ c.source_url }}" target="_blank">View</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>No broker calls found.</p>
+        {% endif %}
+    </div>
+
+    <p class="disclaimer">
+       This data is for educational and informational purposes only and does not constitute investment advice. Please consult a qualified financial adviser before making any investment decisions.
+    </p>
+
+    <!-- Simple client-side table sorter -->
+   <script src="{{ url_for('static', filename='js/table_sort.js') }}"></script>
+</body>
+</html>
