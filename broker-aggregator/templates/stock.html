@@ -21,19 +21,31 @@
     {% else %}
     <table>
         <tr>
+            <th>Stock</th>
             <th>Broker</th>
             <th>Rating</th>
             <th>Target Price</th>
+            <th>Last Closing Price</th>
             <th>Date</th>
             <th>Source</th>
         </tr>
         {% for c in calls %}
         <tr>
-            <td>{{ c.broker }}</td>
+            <td>{{ c.stock }}</td>
+            <td>
+                <a href="/broker/{{ c.broker }}">{{ c.broker }}</a>
+            </td>
             <td>{{ c.rating }}</td>
             <td>
                 {% if c.target_price is not none %}
                     {{ c.target_price }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td>
+                {% if c.previous_price is not none %}
+                    {{ c.previous_price}}
                 {% else %}
                     -
                 {% endif %}
@@ -46,7 +58,7 @@
     {% endif %}
 
     <p style="margin-top:40px;font-size:0.9em;color:#666;">
-        Data loaded from local CSV. Demo only.
+        This data is for educational and informational purposes only and does not constitute investment advice. Please consult a qualified financial adviser before making any investment decisions.
     </p>
 </body>
 </html>

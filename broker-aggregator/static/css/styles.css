@@ -1,0 +1,70 @@
+body { font-family: sans-serif; margin: 20px; }
+
+          .navbar {
+            background: #111;
+            padding: 12px 20px;
+        }
+
+        .navbar a {
+            color: white;
+            margin-right: 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .search-container form {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type=text] {
+            padding: 6px;
+            width: 220px;
+        }
+
+        .content-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #f2f2f2;
+            cursor: pointer;          /* show clickable */
+        }
+
+        .disclaimer {
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+        }

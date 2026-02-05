@@ -1,27 +1,13 @@
 import csv                      # for reading CSV files
 from flask import Flask, render_template, request
-import json
-from urllib.request import urlopen
+from utils.data_loader import load_broker_calls_from_csv
+
 
 app = Flask(__name__)
 
+
 ## Load broker calls from CSV file at startup
-def load_broker_calls_from_csv(path: str):
-    calls = []
-    with open(path, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            row["stock"] = row["stock"].upper().strip()
 
-            # Convert target_price: use None when -1 in CSV
-            tp_raw = row["target_price"].strip()
-            if tp_raw == "" or tp_raw == "-1":
-                row["target_price"] = None
-            else:
-                row["target_price"] = float(tp_raw)
-
-            calls.append(row)
-    return calls
 
 def build_broker_index(calls):
     """
@@ -38,52 +24,68 @@ def build_broker_index(calls):
 
 
 
-def get_prev_close(symbol):
-    url = f"https://query1.finance.yahoo.com/v7/finance/quote?symbols={symbol}.NS"
-    with urlopen(url, timeout=5) as resp:
-        data = json.loads(resp.read().decode("utf-8"))
-    result = data["quoteResponse"]["result"]
-    if not result:
-        return None
-    return result[0].get("regularMarketPreviousClose")
-
 
 # Load once when the app starts
 BROKER_CALLS = load_broker_calls_from_csv("broker_calls.csv")
+
 
 # Build broker index once
 BROKERS = build_broker_index(BROKER_CALLS)
 
 @app.route("/", methods=["GET"])
-def home():
+def landing():
+    """
+    Main landing page
+    Center title + search box
+    """
+    return render_template("landing.html")
+
+
+@app.route("/search", methods=["GET"])
+def search():
     """
     Home page with search box.
     - If ?q=SYMBOL is provided, filter calls for that symbol.
     - Otherwise, show ALL broker calls.
     Also sort by broker name (ascending).
     """
-    query = request.args.get("q", "").upper().strip()
+
+
+    query = request.args.get("q", "").lower().strip()
 
     # Start from all calls
     if query:
-        filtered = [c for c in BROKER_CALLS if c["stock"] == query]
+        filtered = [
+            c for c in BROKER_CALLS
+            if query in (c["stock"] or "").lower()
+            or query in (c["broker"] or "").lower()
+        ]
     else:
         filtered = BROKER_CALLS[:]   # copy full list
-
-    for c in filtered:
-        try:
-            c["prev_close"] = get_prev_close(c["stock"])
-        except Exception:
-            c["prev_close"] = None
 
 
     # Sort by broker name ascending
     filtered.sort(key=lambda c: c["broker"].lower())
 
     return render_template(
-        "home.html",
+        "ratings.html",
         query=query,
         calls=filtered,
+    )
+
+@app.route("/ratings", methods=["GET"])
+def ratings():
+    """
+    Broker ratings table page
+    """
+
+    calls = BROKER_CALLS[:]
+    calls.sort(key=lambda c: (c["broker"] or "").lower())
+
+    return render_template(
+        "ratings.html",
+        query="",
+        calls=calls,
     )
 
 
