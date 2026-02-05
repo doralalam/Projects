@@ -1,0 +1,15 @@
+stock,broker,rating,target_price,previous_price,date,source_url,symbol
+NTPC,Jefferies,BUY,440,367.25,2026-01-02,https://in.investing.com/news/stock-market-news/jefferies-flags-top-indian-power-stocks-among-best-utility-picks-for-2026-93CH-5,NSE:NTPC
+JSWENERGY,Jefferies,BUY,451,468.85,2025-12-12,https://economictimes.com/markets/stocks/news/jefferies-pegs-nifty-dec-2026-target-at-28300-on-improved-eps-growth-cushioning-valuations-names-top-10-picks/articleshow/115678901.cms,NSE:JSWENERGY
+AXISBANK,Jefferies,BUY,1279,1338.7,2025-12-12,https://economictimes.com/markets/stocks/news/jefferies-names-axis-bank-mm-among-10-stocks-as-its-top-bets-how-many-do-you-own/articleshow/115678902.cms,NSE:AXISBANK
+BHARTIARTL,Jefferies,BUY,2067,2025.8,2025-12-12,https://economictimes.com/markets/stocks/news/jefferies-names-axis-bank-mm-among-10-stocks-as-its-top-bets-how-many-do-you-own/articleshow/115678902.cms,NSE:BHARTIARTL
+CHOLAFIN,Jefferies,BUY,1744,1739.5,2025-12-12,https://economictimes.com/markets/stocks/news/jefferies-names-axis-bank-mm-among-10-stocks-as-its-top-bets-how-many-do-you-own/articleshow/115678902.cms,NSE:CHOLAFIN
+TVSMOTOR,Jefferies,BUY,3605,3727.4,2025-12-12,https://economictimes.com/markets/stocks/news/jefferies-names-axis-bank-mm-among-10-stocks-as-its-top-bets-how-many-do-you-own/articleshow/115678902.cms,NSE:TVSMOTOR
+MAXHEALTH,Jefferies,BUY,1077,1025.45,2025-12-12,https://economictimes.com/markets/stocks/news/jefferies-names-axis-bank-mm-among-10-stocks-as-its-top-bets-how-many-do-you-own/articleshow/115678902.cms,NSE:MAXHEALTH
+RELIANCE,Jefferies,BUY,1785,1456.8,2025-10-20,https://www.money9live.com/share-market/jefferies-buy-rating-on-four-stocks-with-up-to-30-percent-upside-potential-article-761026.html,NSE:RELIANCE
+HDFCBANK,Jefferies,BUY,1240,953.1,2025-10-20,https://www.money9live.com/share-market/jefferies-buy-rating-on-four-stocks-with-up-to-30-percent-upside-potential-article-761026.html,NSE:HDFCBANK
+INDUSINDBK,Jefferies,BUY,0,921.3,2025-10-20,https://www.money9live.com/share-market/jefferies-buy-rating-on-four-stocks-with-up-to-30-percent-upside-potential-article-761026.html,NSE:INDUSINDBK
+ITC,Jefferies,BUY,0,313.85,2025-11-02,https://www.whalesbook.com/news/English/brokerage-reports/jefferies-identifies-5-stocks-with-buy-recommendations-and-price-targets-for-indian-stocks/656576ac3ba2c,NSE:ITC
+DABUR,Jefferies,BUY,0,501.2,2025-11-02,https://www.whalesbook.com/news/English/brokerage-reports/jefferies-identifies-5-stocks-with-buy-recommendations-and-price-targets-for-indian-stocks/656576ac3ba2c,NSE:DABUR
+NAVINFLUOR,Jefferies,BUY,0,6334.5,2025-11-02,https://www.whalesbook.com/news/English/brokerage-reports/jefferies-identifies-5-stocks-with-buy-recommendations-and-price-targets-for-indian-stocks/656576ac3ba2c,NSE:NAVINFLUOR
+SWIGGY,Jefferies,BUY,0,321.1,2025-11-02,https://www.whalesbook.com/news/English/brokerage-reports/jefferies-identifies-5-stocks-with-buy-recommendations-and-price-targets-for-indian-stocks/656576ac3ba2c,NSE:SWIGGY
