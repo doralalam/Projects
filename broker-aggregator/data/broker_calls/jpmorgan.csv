@@ -1,0 +1,6 @@
+stock,broker,rating,target_price,previous_price,date,source_url,symbol
+RELIANCE,JP Morgan,OVERWEIGHT,-1,1456.8,2025-12-02,https://www.youtube.com/watch?v=c0jk7rxJmqM,NSE:RELIANCE
+ICICIBANK,JP Morgan,OVERWEIGHT,-1,1408.4,2025-12-02,https://www.youtube.com/watch?v=c0jk7rxJmqM,NSE:ICICIBANK
+HDFCBANK,JP Morgan,NEUTRAL,-1,953.1,2025-12-02,https://www.youtube.com/watch?v=c0jk7rxJmqM,NSE:HDFCBANK
+SBIN,JP Morgan,OVERWEIGHT,-1,1068.2,2025-12-02,https://www.youtube.com/watch?v=c0jk7rxJmqM,NSE:SBIN
+LT,JP Morgan,OVERWEIGHT,-1,4087.1,2025-12-02,https://www.youtube.com/watch?v=c0jk7rxJmqM,NSE:LT
