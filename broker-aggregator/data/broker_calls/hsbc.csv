@@ -1,0 +1,10 @@
+stock,broker,rating,target_price,previous_price,date,source_url,symbol
+SBIN,HSBC,BUY,1110,1068.2,2025-12-15,https://www.news18.com/business/markets/hsbc-bullish-on-india-sees-sensex-crossing-94000-in-2026-lists-top-10-favourite-stocks-8957137.html,NSE:SBIN
+INFY,HSBC,BUY,1720,1535.8,2025-12-15,https://www.news18.com/business/markets/hsbc-bullish-on-india-sees-sensex-crossing-94000-in-2026-lists-top-10-favourite-stocks-8957137.html,NSE:INFY
+M&M,HSBC,BUY,4000,3574,2025-12-15,https://www.news18.com/business/markets/hsbc-bullish-on-india-sees-sensex-crossing-94000-in-2026-lists-top-10-favourite-stocks-8957137.html,NSE:M&M
+HINDALCO,HSBC,BUY,1040,964.95,2025-12-15,https://www.news18.com/business/markets/hsbc-bullish-on-india-sees-sensex-crossing-94000-in-2026-lists-top-10-favourite-stocks-8957137.html,NSE:HINDALCO
+ICICIGI,HSBC,BUY,2250,1854,2025-12-15,https://www.news18.com/business/markets/hsbc-bullish-on-india-sees-sensex-crossing-94000-in-2026-lists-top-10-favourite-stocks-8957137.html,NSE:ICICIGI
+MARICO,HSBC,BUY,870,733.4,2025-12-15,https://www.news18.com/business/markets/hsbc-bullish-on-india-sees-sensex-crossing-94000-in-2026-lists-top-10-favourite-stocks-8957137.html,NSE:MARICO
+ADANIPORTS,HSBC,BUY,1700,1567.9,2025-12-11,https://economictimes.indiatimes.com/markets/stocks/news/hsbc-names-10-stocks-that-could-rally-in-2026-how-many-do-you-own/articleshow/115612345.cms,NSE:ADANIPORTS
+POLICYBZR,HSBC,BUY,2250,1439.9,2025-11-19,https://www.whalesbook.com/news/English/brokerage-reports/HSBC-Picks-PB-Fintech-Phoenix-Mills-Top-Indian-Stocks-Beyond-AI-for-2026/6559f5ea41d31,NSE:POLICYBZR
+PHOENIXLTD,HSBC,BUY,2300,1719.1,2025-11-19,https://www.whalesbook.com/news/English/brokerage-reports/HSBC-Picks-PB-Fintech-Phoenix-Mills-Top-Indian-Stocks-Beyond-AI-for-2026/6559f5ea41d31,NSE:PHOENIXLTD

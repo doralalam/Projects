@@ -1,0 +1,10 @@
+stock,broker,rating,target_price,previous_price,date,source_url,symbol
+ICICIBANK,Nomura,BUY,-1,1408.4,2025-12-01,https://www.ndtvprofit.com/markets/nifty-to-hit-29300-in-2026-says-nomura-as-it-lists-top-20-stock-picks-details-inside-9734770,NSE:ICICIBANK
+SBIN,Nomura,BUY,-1,1068.2,2025-12-01,https://www.ndtvprofit.com/markets/nifty-to-hit-29300-in-2026-says-nomura-as-it-lists-top-20-stock-picks-details-inside-9734770,NSE:SBIN
+AXISBANK,Nomura,BUY,-1,1338.7,2025-12-01,https://www.ndtvprofit.com/markets/nifty-to-hit-29300-in-2026-says-nomura-as-it-lists-top-20-stock-picks-details-inside-9734770,NSE:AXISBANK
+HDFCBANK,Nomura,BUY,-1,953.1,2025-12-01,https://www.ndtvprofit.com/markets/nifty-to-hit-29300-in-2026-says-nomura-as-it-lists-top-20-stock-picks-details-inside-9734770,NSE:HDFCBANK
+INFY,Nomura,BUY,-1,1535.8,2025-12-01,https://www.ndtvprofit.com/markets/nifty-to-hit-29300-in-2026-says-nomura-as-it-lists-top-20-stock-picks-details-inside-9734770,NSE:INFY
+TCS,Nomura,BUY,-1,2999.1,2025-12-01,https://www.ndtvprofit.com/markets/nifty-to-hit-29300-in-2026-says-nomura-as-it-lists-top-20-stock-picks-details-inside-9734770,NSE:TCS
+ULTRACEMCO,Nomura,BUY,-1,12806,2025-12-01,https://economictimes.indiatimes.com/markets/stocks/news/nomura-sets-nifty50-target-at-26140-for-march-2026-adds-3-stocks-to-preferred-list/articleshow/115234567.cms,NSE:ULTRACEMCO
+MARUTI,Nomura,BUY,-1,15071,2025-12-01,https://economictimes.indiatimes.com/markets/stocks/news/nomura-sets-nifty50-target-at-26140-for-march-2026-adds-3-stocks-to-preferred-list/articleshow/115234567.cms,NSE:MARUTI
+LT,Nomura,BUY,-1,4087.1,2025-12-01,https://economictimes.indiatimes.com/markets/stocks/news/nomura-sets-nifty50-target-at-26140-for-march-2026-adds-3-stocks-to-preferred-list/articleshow/115234567.cms,NSE:LT
