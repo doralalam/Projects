@@ -30,7 +30,7 @@ def load_single_sheet(url, broker_name):
 
     for row in reader:
 
-        calls.append({
+        call = {
             "stock": (row.get("stock") or "").upper().strip(),
             "broker": broker_name.strip(),
             "rating": (row.get("rating") or "").strip(),
@@ -38,7 +38,12 @@ def load_single_sheet(url, broker_name):
             "previous_price": parse_float(row.get("previous_price")),
             "date": (row.get("date") or "").strip(),
             "source_url": (row.get("source_url") or "").strip(),
-        })
+        }
+
+        # Calculate upside
+        call["upside"] = calculate_upside(call)
+
+        calls.append(call)
 
     return calls
 
@@ -67,3 +72,14 @@ def load_all_sheets():
     print("Total merged calls:", len(all_calls))
 
     return all_calls
+
+
+def calculate_upside(call):
+    tp = call.get("target_price")
+    cp = call.get("previous_price")
+
+    if tp is None or cp is None or cp == 0:
+        return None
+
+    upside = ((tp - cp) / cp) * 100
+    return round(upside, 2)
