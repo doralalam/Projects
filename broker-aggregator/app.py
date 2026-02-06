@@ -1,6 +1,7 @@
 import csv                      # for reading CSV files
 from flask import Flask, render_template, request
-from utils.data_loader import load_multiple_csvs
+from utils.data_loader import load_all_sheets
+
 
 
 
@@ -28,7 +29,8 @@ def build_broker_index(calls):
 
 
 # Load once when the app starts
-BROKER_CALLS = load_multiple_csvs("data/broker_calls")
+BROKER_CALLS = load_all_sheets()
+
 
 
 # Build broker index once
