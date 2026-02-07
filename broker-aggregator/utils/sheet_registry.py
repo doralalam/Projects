@@ -48,4 +48,8 @@ SHEET_URLS = [
         "broker": "UBS",
         "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRRBDZoNWqkpQic8GR1zjGauZG9FQ-hzjV8KYb2O8FoEb0G4YKQXCXzNf5Zui7TYbVLl6bx8Q3sGhvb/pub?output=csv"
     },
+    {
+        "broker": "JM Financial",
+        "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTseHKQIpmvMaqqSWAvWYCEx_UzkbnJ9hVioNxyUYKuDOcOTfJ_O3xW12y9PpPItb0JbCb72GXxo6BF/pub?output=csv"
+    },
 ]
