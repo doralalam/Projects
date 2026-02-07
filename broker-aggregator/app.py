@@ -88,6 +88,7 @@ def landing():
     """
     return render_template("landing.html")
 
+## To reload the app using URL instead of running it from terminal
 
 @app.route("/reload")
 def admin_reload():
