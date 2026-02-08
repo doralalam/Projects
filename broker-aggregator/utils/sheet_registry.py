@@ -1,6 +1,6 @@
 SHEET_URLS = [
     {
-        "broker": "Citi",
+        "broker": "Citi Research",
         "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQixMksAFKnh_wz42Rhbo1tvYS1awtfMQMYA8bm2PVGChiHbsW4uvNiT3oPwp8sjV_7UpPkBrMVNpiW/pub?output=csv"
         
     },
