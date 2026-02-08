@@ -1,56 +1,124 @@
+
 from flask import Flask, render_template, request
 from utils.data_loader import load_all_sheets
 from datetime import datetime
 
+## Scheduler import
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 
-# ---------------------------------
-# GLOBAL DATA CACHE
-# ---------------------------------
+
+## data cache
+
+## Stores all broker calls
 BROKER_CALLS = []
+
+## Stores broker summary (name + call count)
 BROKERS = {}
+
+## Stores last refresh timestamp
 LAST_REFRESH = None
 
 
-## Load broker calls from CSV file at startup
+
+## broker index
+
 def build_broker_index(calls):
     """
-    Build a dict: {broker_name: {"name": broker_name, "count": n}}
-    count = how many calls that broker has in our data.
+    Build broker summary dictionary.
+
+    Output format:
+    {
+        broker_name: {
+            "name": broker_name,
+            "count": total_calls
+        }
+    }
     """
+
     brokers = {}
+
     for c in calls:
         name = c["broker"]
+
         if name not in brokers:
-            brokers[name] = {"name": name, "count": 0}
+            brokers[name] = {
+                "name": name,
+                "count": 0
+            }
+
         brokers[name]["count"] += 1
+
     return brokers
 
-## Reload data
+
+## reload function
+
 def reload_data():
     """
-    Reload all Google Sheets data into memory.
+    Reload all broker calls from Google Sheets.
+
+    Updates:
+    - BROKER_CALLS
+    - BROKERS
+    - LAST_REFRESH
     """
+
     global BROKER_CALLS, BROKERS, LAST_REFRESH
 
-    print("🔄 Reloading data from Google Sheets...")
+    print("Reloading data from Google Sheets...")
 
+    # Load fresh data
     BROKER_CALLS = load_all_sheets()
+
+    # Rebuild broker index
     BROKERS = build_broker_index(BROKER_CALLS)
+
+    # Update refresh time
     LAST_REFRESH = datetime.now()
 
-    print(f"✅ Reload complete. {len(BROKER_CALLS)} calls loaded.")
+    print(f"Reload complete. {len(BROKER_CALLS)} calls loaded.")
 
 
+
+## initial load
 reload_data()
 
 
-# Load once when the app starts
-def get_calls():
-    return load_all_sheets()
+
+## scheduler for auto-reload for every hour
+
+def start_scheduler():
+    """
+    Starts background scheduler
+    Reloads data every 1 hour.
+    """
+
+    scheduler = BackgroundScheduler()
+
+    # Run reload_data every 60 minutes
+    scheduler.add_job(
+        func=reload_data,
+        trigger="interval",
+        hours=1
+    )
+
+    scheduler.start()
+
+    print("⏰ Auto-reload scheduler started (1 hour interval)")
+
+
+# Start scheduler when app launches
+start_scheduler()
+
+
+## sorting function
 
 def sort_calls(calls, sort_key):
+    """
+    Sort broker calls based on selected column.
+    """
 
     if sort_key == "upside":
         return sorted(
@@ -73,25 +141,31 @@ def sort_calls(calls, sort_key):
             reverse=True
         )
 
-    # Default → broker
+    # Default sorting → Broker name
     return sorted(
         calls,
         key=lambda x: (x.get("broker") or "").lower()
     )
 
 
+## routes
+
 @app.route("/", methods=["GET"])
 def landing():
     """
-    Main landing page
-    Center title + search box
+    Landing page with search box.
     """
     return render_template("landing.html")
 
-## To reload the app using URL instead of running it from terminal
 
+## manual reload
 @app.route("/reload")
 def admin_reload():
+    """
+    Manual reload endpoint.
+    Useful for testing or urgent refresh.
+    """
+
     reload_data()
 
     return {
@@ -101,9 +175,14 @@ def admin_reload():
     }
 
 
-
+## search section
 @app.route("/search", methods=["GET"])
 def search():
+    """
+    Search broker calls by:
+    - Stock symbol
+    - Broker name
+    """
 
     query = request.args.get("q", "").lower().strip()
     sort_key = request.args.get("sort", "broker")
@@ -126,9 +205,14 @@ def search():
         sort=sort_key
     )
 
+## ratings page
 
 @app.route("/ratings", methods=["GET"])
 def ratings():
+    """
+    Display all broker calls.
+    Supports sorting.
+    """
 
     sort_key = request.args.get("sort", "broker")
 
@@ -143,9 +227,13 @@ def ratings():
     )
 
 
+## stock detail page
 
 @app.route("/stock/<symbol>", methods=["GET"])
 def stock_detail(symbol):
+    """
+    Show all broker calls for a specific stock.
+    """
 
     symbol = symbol.upper().strip()
 
@@ -161,22 +249,31 @@ def stock_detail(symbol):
     )
 
 
+## broker list
+
 @app.route("/brokers", methods=["GET"])
 def brokers_list():
     """
-    List all brokers present in our data, with call counts.
-    URL: /brokers
+    List all brokers with call counts.
     """
-    # Convert dict -> list for easy use in template
+
     broker_list = list(BROKERS.values())
 
-    # Sort by name (optional)
     broker_list.sort(key=lambda b: b["name"].lower())
 
-    return render_template("brokers.html", brokers=broker_list)
+    return render_template(
+        "brokers.html",
+        brokers=broker_list
+    )
+
+
+## broker details
 
 @app.route("/broker/<broker_name>", methods=["GET"])
 def broker_detail(broker_name):
+    """
+    Show all calls from a specific broker.
+    """
 
     calls = [
         c for c in BROKER_CALLS
