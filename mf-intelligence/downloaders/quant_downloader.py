@@ -22,7 +22,7 @@ def download_factsheet(file_url, file_name):
         with open(save_path, "wb") as f:
             f.write(response.content)
 
-        print("Saved →", save_path)
+        print("Saved -> ", save_path)
 
     else:
         print("Failed. Status code:", response.status_code)
@@ -35,3 +35,7 @@ if __name__ == "__main__":
     file_name = url.split('/')[-1]
 
     download_factsheet(url, file_name)
+
+
+
+
