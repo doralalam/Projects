@@ -73,7 +73,7 @@ def run_invesco_backfill():
 
         download_file(file_url, save_path)
 
-    print("\n✅ Invesco backfill completed")
+    print("\nInvesco backfill completed")
 
 
 if __name__ == "__main__":
