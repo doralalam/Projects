@@ -11,7 +11,7 @@ FILE_PREFIX = "invesco-mf-factsheet---"
 
 def generate_last_12_months():
     """
-    Generate last 12 months in 'month-year' lowercase format
+    Generate last 12 months in "month-year" lowercase format
     Example: january-2026
     """
 
@@ -40,7 +40,7 @@ def download_file(file_url, save_path):
         with open(save_path, "wb") as f:
             f.write(r.content)
 
-        print("Saved →", save_path)
+        print("Saved -> ", save_path)
 
     else:
         print("Not Available:", file_url)
