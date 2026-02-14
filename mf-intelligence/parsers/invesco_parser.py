@@ -2,6 +2,7 @@ import pdfplumber
 import pandas as pd
 import os
 
+# Invesco Files got corrupted. Need to work on invesco_downloader.py
 
 def extract_tables_from_pdf(pdf_path):
     """
