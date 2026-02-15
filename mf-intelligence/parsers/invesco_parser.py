@@ -2,37 +2,30 @@ import pdfplumber
 import pandas as pd
 import os
 
-# Invesco Files got corrupted. Need to work on invesco_downloader.py
 
 def extract_tables_from_pdf(pdf_path):
-    """
-    Extract all tables from an Invesco factsheet PDF
-    """
 
-    all_tables = []
+    import pdfplumber
 
-    print(f"Reading PDF -> {pdf_path}")
+    tables_all = []
 
     with pdfplumber.open(pdf_path) as pdf:
 
-        for page_no, page in enumerate(pdf.pages):
+        for i, page in enumerate(pdf.pages):
 
-            tables = page.extract_tables()
+            print(f"Reading Page {i+1}")
 
-            if tables:
+            try:
+                tables = page.extract_tables()
 
-                for table in tables:
+                if tables:
+                    tables_all.extend(tables)
 
-                    df = pd.DataFrame(table)
+            except Exception as e:
+                print("Skipped page due to error:", e)
 
-                    # Drop fully empty rows
-                    df.dropna(how="all", inplace=True)
+    return tables_all
 
-                    if not df.empty:
-                        df["Page"] = page_no + 1
-                        all_tables.append(df)
-
-    return all_tables
 
 
 def save_tables_to_excel(tables, output_path):
