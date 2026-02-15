@@ -11,7 +11,7 @@ def extract_tables_from_pdf(pdf_path):
 
     all_tables = []
 
-    print(f"Reading PDF → {pdf_path}")
+    print(f"Reading PDF -> {pdf_path}")
 
     with pdfplumber.open(pdf_path) as pdf:
 
@@ -46,7 +46,7 @@ def save_tables_to_excel(tables, output_path):
             sheet_name = f"Table_{i+1}"
             table.to_excel(writer, sheet_name=sheet_name, index=False)
 
-    print(f"Saved Excel → {output_path}")
+    print(f"Saved Excel -> {output_path}")
 
 
 def run_parser():
@@ -74,7 +74,7 @@ def run_parser():
                 save_tables_to_excel(tables, output_path)
 
             else:
-                print(f"No tables found → {file}")
+                print(f"No tables found -> {file}")
 
 
 if __name__ == "__main__":
