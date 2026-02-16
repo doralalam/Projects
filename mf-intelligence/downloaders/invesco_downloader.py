@@ -1,99 +1,144 @@
-import os
-import time
 import requests
-
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
+import os
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 
-URL = "https://www.invescomutualfund.com/literature-and-form?tab=Complete"
-
-SAVE_DIR = "data/raw_files/invesco_xlsx"
-
-
-def get_driver():
-
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # run in background
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-
-    driver = webdriver.Chrome(
-        service=Service(ChromeDriverManager().install()),
-        options=options
-    )
-
-    return driver
+BASE_URL = "https://www.invescomutualfund.com/api/CompleteMonthlyHoldings"
+CLASSIFICATION = "equity"
 
 
-def extract_xlsx_links():
+def fetch_fund_data(year):
 
-    driver = get_driver()
+    params = {
+        "year": year,
+        "classification": CLASSIFICATION
+    }
 
-    print("Opening browser...")
+    response = requests.get(BASE_URL, params=params)
 
-    driver.get(URL)
+    if response.status_code != 200:
+        raise Exception(f"API failed for {year}")
 
-    # Wait for JS to load table
-    time.sleep(5)
-
-    links = []
-
-    elements = driver.find_elements(By.TAG_NAME, "a")
-
-    for el in elements:
-
-        href = el.get_attribute("href")
-
-        if href and ".xlsx" in href.lower():
-            links.append(href)
-
-    driver.quit()
-
-    print(f"Found {len(links)} XLSX links")
-
-    return links
+    return response.json()
 
 
-def download_files(links, limit=17):
+def generate_months(n_months=12):
+
+    months = []
+
+    today = datetime.today()
+
+    for i in range(n_months):
+
+        date = today - relativedelta(months=i)
+
+        mon = date.strftime("%b")
+        year = date.strftime("%Y")
+
+        months.append((mon, year))
+
+    return months
+
+
+month_key_map = {
+    "Jan": ("JanUrl", "JanName"),
+    "Feb": ("FebUrl", "FebName"),
+    "Mar": ("MarUrl", "MarName"),
+    "Apr": ("AprUrl", "AprName"),
+    "May": ("MayUrl", "MayName"),
+    "Jun": ("JunUrl", "JunName"),
+    "Jul": ("JulUrl", "JulName"),
+    "Aug": ("AugUrl", "AugName"),
+    "Sep": ("SepUrl", "SepName"),
+    "Oct": ("OctUrl", "OctName"),
+    "Nov": ("NovUrl", "NovName"),
+    "Dec": ("DecUrl", "DecName"),
+}
+
+
+def download_file(file_url, save_dir):
+
+    file_name = file_url.split("/")[-1].split("?")[0]
+    save_path = os.path.join(save_dir, file_name)
+
+    if os.path.exists(save_path):
+        print("Already exists:", file_name)
+        return
+
+    print("Downloading:", file_name)
+
+    try:
+        r = requests.get(file_url, timeout=60)
+
+        if r.status_code == 200:
+
+            with open(save_path, "wb") as f:
+                f.write(r.content)
+
+            print("Saved ->", save_path)
+
+        else:
+            print("Not Available:", file_name)
+
+    except Exception as e:
+        print("Error:", file_name, "|", e)
+
+
+def run_backfill():
 
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    save_dir = os.path.join(base_dir, "data", "raw_files", "invesco")
-
+    # ✅ FIX 1 — Removed equity folder
+    save_dir = os.path.join(
+        base_dir,
+        "data",
+        "raw_files",
+        "invesco"
+    )
 
     os.makedirs(save_dir, exist_ok=True)
 
-    for link in links[:limit]:
+    rolling_months = generate_months()
 
-        file_name = link.split("/")[-1].split("?")[0]
+    years_needed = list(set([y for _, y in rolling_months]))
 
-        save_path = os.path.join(save_dir, file_name)
+    print("\nYears needed:", years_needed)
 
-        print("Downloading:", file_name)
+    fund_data_all = {}
 
-        r = requests.get(link)
+    for year in years_needed:
+        print(f"Fetching API → {year}")
+        fund_data_all[year] = fetch_fund_data(year)
 
-        with open(save_path, "wb") as f:
-            f.write(r.content)
+    print("\nDownloading rolling 12 months...\n")
 
-    print("\nDownload completed.")
+    for year, funds in fund_data_all.items():
 
+        for fund in funds:
 
-def run():
+            fund_name = fund["Name"].replace(" ", "_")
+            fund_dir = os.path.join(save_dir, fund_name)
+            os.makedirs(fund_dir, exist_ok=True)
 
-    links = extract_xlsx_links()
+            for mon, yr in rolling_months:
 
-    portfolio_links = [
-        l for l in links if "monthly" in l.lower()
-    ]
+                if str(year) != str(yr):
+                    continue
 
-    print("Portfolio files:", len(portfolio_links))
+                url_key, name_key = month_key_map[mon]
 
-    download_files(portfolio_links, limit=17)
+                file_url = fund.get(url_key)
+                month_label = fund.get(name_key)
+
+                # ✅ FIX 2 — Ensure month exists in API
+                if not file_url or not month_label:
+                    continue
+
+                download_file(file_url, fund_dir)
+
+    print("\n✅ Backfill completed.")
 
 
 if __name__ == "__main__":
-    run()
+    run_backfill()
