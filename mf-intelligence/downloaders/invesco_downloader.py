@@ -57,16 +57,20 @@ month_key_map = {
 }
 
 
-def download_file(file_url, save_dir):
+def download_file(file_url, save_dir, fund_name, month, year):
 
-    file_name = file_url.split("/")[-1].split("?")[0]
-    save_path = os.path.join(save_dir, file_name)
+
+    # Standardized File Name
+    std_name = f"{fund_name}_{month}_{year}.xlsx"
+    std_name = std_name.replace(" ", "_")
+
+    save_path = os.path.join(save_dir, std_name)
 
     if os.path.exists(save_path):
-        print("Already exists:", file_name)
+        print("Already exists:", std_name)
         return
 
-    print("Downloading:", file_name)
+    print("Downloading:", std_name)
 
     try:
         r = requests.get(file_url, timeout=60)
@@ -79,10 +83,11 @@ def download_file(file_url, save_dir):
             print("Saved ->", save_path)
 
         else:
-            print("Not Available:", file_name)
+            print("Not Available:", std_name)
 
     except Exception as e:
-        print("Error:", file_name, "|", e)
+        print("Error:", std_name, "|", e)
+
 
 
 def run_backfill():
@@ -133,7 +138,14 @@ def run_backfill():
                 if not file_url or not month_label:
                     continue
 
-                download_file(file_url, fund_dir)
+                download_file(
+                    file_url,
+                    fund_dir,
+                    fund_name,
+                    mon,
+                    yr
+                )
+
 
     print("\nBackfill completed.")
 
