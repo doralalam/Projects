@@ -89,7 +89,6 @@ def run_backfill():
 
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    # ✅ FIX 1 — Removed equity folder
     save_dir = os.path.join(
         base_dir,
         "data",
@@ -131,13 +130,12 @@ def run_backfill():
                 file_url = fund.get(url_key)
                 month_label = fund.get(name_key)
 
-                # ✅ FIX 2 — Ensure month exists in API
                 if not file_url or not month_label:
                     continue
 
                 download_file(file_url, fund_dir)
 
-    print("\n✅ Backfill completed.")
+    print("\nBackfill completed.")
 
 
 if __name__ == "__main__":

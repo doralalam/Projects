@@ -1,80 +1,60 @@
 import requests
 import os
+import re
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
+from dateutil.relativedelta import relativedelta  
 
 
-# ---------------------------------
-# Config
-# ---------------------------------
-BASE_URL = "https://www.invescomutualfund.com/api/CompleteMonthlyHoldings"
-CLASSIFICATION = "equity"
+BASE_URL = "https://quantmutual.com/Admin/disclouser/"
+
+## To parse the fund names
+def parse_fund_names(json_data):
+
+    html_data = json_data['d']
+
+    links = re.findall(r"Admin/disclouser/.*?\.xlsx", html_data)
+
+    fund_names = set()   
+
+    for link in links:
+
+        file_name = link.split("/")[-1]
+
+        parts = file_name.replace(".xlsx", "").split("_")
+
+        fund_name = "_".join(parts[:-2])
+
+        fund_names.add(fund_name)
+
+    return sorted(fund_names)
 
 
-# ---------------------------------
-# Parse Fund Data from API
-# ---------------------------------
-def fetch_fund_data(year):
-
-    params = {
-        "year": year,
-        "classification": CLASSIFICATION
-    }
-
-    response = requests.get(BASE_URL, params=params)
-
-    if response.status_code != 200:
-        raise Exception(f"API failed for {year}")
-
-    return response.json()
-
-
-# ---------------------------------
-# Rolling 12 Months Generator
-# ---------------------------------
 def generate_months(n_months=12):
+    """
+    Generate last 12 months in Mon_Year format
+    Example: Jan_2026
+    """
 
     months = []
 
     today = datetime.today()
 
-    for i in range(n_months):
+    ## Standardize the months as per the Quant API
+    std_mon = {"01":"Jan", "02":"Feb", "03":"Mar", "04":"Apr", "05":"May", "06":"Jun", "07":"July", "08":"Aug", "09":"Sep", "10":"Oct", "11":"Nov", "12":"Dec"}
+        
 
+    for i in range(n_months):
         date = today - relativedelta(months=i)
 
-        mon = date.strftime("%b")   # Jan, Feb…
-        year = date.strftime("%Y")
-
-        months.append((mon, year))
-
+        mon = date.strftime("%m")  # 01, 02, 03,...12
+        year = date.strftime("%Y") # 2026, 2025, .....
+        months.append(std_mon[mon]+'_'+year) # Jan_2026
     return months
 
 
-# ---------------------------------
-# Month → API Key Map
-# ---------------------------------
-month_key_map = {
-    "Jan": "JanUrl",
-    "Feb": "FebUrl",
-    "Mar": "MarUrl",
-    "Apr": "AprUrl",
-    "May": "MayUrl",
-    "Jun": "JunUrl",
-    "Jul": "JulUrl",
-    "Aug": "AugUrl",
-    "Sep": "SepUrl",
-    "Oct": "OctUrl",
-    "Nov": "NovUrl",
-    "Dec": "DecUrl",
-}
-
-
-# ---------------------------------
-# Download File
-# ---------------------------------
 def download_file(file_url, save_dir):
 
-    file_name = file_url.split("/")[-1].split("?")[0]
+    file_name = file_url.split("/")[-1]
     save_path = os.path.join(save_dir, file_name)
 
     if os.path.exists(save_path):
@@ -84,12 +64,12 @@ def download_file(file_url, save_dir):
     print("Downloading:", file_name)
 
     try:
-        r = requests.get(file_url, timeout=60)
+        response = requests.get(file_url, timeout=30)
 
-        if r.status_code == 200:
+        if response.status_code == 200:
 
             with open(save_path, "wb") as f:
-                f.write(r.content)
+                f.write(response.content)
 
             print("Saved ->", save_path)
 
@@ -100,67 +80,35 @@ def download_file(file_url, save_dir):
         print("Error:", file_name, "|", e)
 
 
-# ---------------------------------
-# Backfill Runner
-# ---------------------------------
-def run_backfill():
 
+def run_backfill(fund_name):
+
+    # Project root
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    save_dir = os.path.join(
-        base_dir,
-        "data",
-        "raw_files",
-        "invesco",
-        "equity"
-    )
-
+    save_dir = os.path.join(base_dir, "data", "raw_files", "quant", fund_name)
     os.makedirs(save_dir, exist_ok=True)
 
-    rolling_months = generate_months()
+    months = generate_months()
 
-    years_needed = list(set([y for _, y in rolling_months]))
+    print(f"\nDownloading last {len(months)} months...\n")
 
-    print("\nYears needed:", years_needed)
+    for m in months:
 
-    # Fetch all required years
-    fund_data_all = {}
+        file_name = f"{fund_name}_{m}.xlsx"
+        file_url = BASE_URL + file_name
 
-    for year in years_needed:
-        print(f"Fetching API → {year}")
-        fund_data_all[year] = fetch_fund_data(year)
+        download_file(file_url, save_dir)
 
-    print("\nDownloading rolling 12 months...\n")
-
-    # Loop funds
-    for year, funds in fund_data_all.items():
-
-        for fund in funds:
-
-            fund_name = fund["Name"].replace(" ", "_")
-
-            for mon, yr in rolling_months:
-
-                if str(year) != str(yr):
-                    continue
-
-                url_key = month_key_map[mon]
-                file_url = fund.get(url_key)
-
-                if not file_url:
-                    continue
-
-                fund_dir = os.path.join(save_dir, fund_name)
-                os.makedirs(fund_dir, exist_ok=True)
-
-                download_file(file_url, fund_dir)
-
-    print("\n✅ Backfill completed.")
+    print(f"\nBackfill download completed for {fund_name}")
 
 
-# ---------------------------------
-# Main
-# ---------------------------------
 if __name__ == "__main__":
 
-    run_backfill()
+    json_data = {"d": "\u003cul\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Aggressive_Hybrid_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Aggressive Hybrid Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Multi_Asset_Allocation_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Multi Asset Allocation Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Multi_Cap_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Multi Cap Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Large_and_Mid_Cap_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Large \u0026 Mid Cap Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Small_Cap_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Small Cap Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Infrastructure_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Infrastructure Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Focused_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Focused Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Liquid_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Liquid Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Mid_Cap_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Mid Cap Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Flexi_Cap_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Flexi cap Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_ELSS_Tax_Saver_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant ELSS Tax Saver Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_ESG_Integration_Strategy_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant ESG Integration Strategy Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Quantamental_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Quantamental Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Value_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Value Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Large_Cap_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Large cap fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Gilt_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Gilt Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Overnight_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Overnight Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Dynamic_Asset_Allocation_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Dynamic Asset Allocation Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Business_Cycle_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Business Cycle Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_BFSI_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant BFSI Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Healthcare_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Healthcare Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Manufacturing_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Manufacturing Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Teck_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Teck Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Momentum_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Momentum Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Commodities_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Commodities Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Consumption_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Consumption Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_PSU_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant PSU Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Arbitrage_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Arbitrage Fund\u003c/a\u003e\u003c/li\u003e\u003cli\u003e\u0026#9658;\u003ca href=\u0027/Admin/disclouser/quant_Equity_Savings_Fund_Jan_2026.xlsx\u0027 target=\u0027_blank\u0027\u003equant Equity Savings Fund\u003c/a\u003e\u003c/li\u003e\u003c/ul\u003e"
+    }
+
+    fund_names = parse_fund_names(json_data)
+
+    for fund_name in fund_names:
+        run_backfill(fund_name)
