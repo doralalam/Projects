@@ -3,10 +3,14 @@ import pandas as pd
 
 # Paths
 
-PROCESSED_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/processed/quant"
-MASTER_OUTPUT = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/masters/quant/quant_Master_Equity_Holdings.xlsx"
+BASE_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data"
 
-os.makedirs(os.path.dirname(MASTER_OUTPUT), exist_ok=True)
+AMC = "quant"
+
+PROCESSED_PATH = os.path.join(BASE_PATH, "processed", AMC)
+OUTPUT_FILE = os.path.join(BASE_PATH, "masters", AMC, f"{AMC}_master_report.xlsx")
+
+os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
 
 # Load all processed files
 
@@ -193,8 +197,8 @@ for _, stock_row in stock_totals.iterrows():
 
 final_df = pd.DataFrame(output_rows)
 
-final_df.to_excel(MASTER_OUTPUT, index=False)
+final_df.to_excel(OUTPUT_FILE, index=False)
 
 print("Master report created successfully!")
-print(f"File: {MASTER_OUTPUT}")
+print(f"File: {OUTPUT_FILE}")
 print(f"Rows: {len(final_df)}")

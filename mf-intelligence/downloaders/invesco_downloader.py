@@ -1,11 +1,22 @@
 import requests
 import os
+import re
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 
 BASE_URL = "https://www.invescomutualfund.com/api/CompleteMonthlyHoldings"
 CLASSIFICATION = "equity"
+
+
+def clean_fund_name(name):
+
+    name = name.strip()
+    name = name.replace("&", "and")
+    name = re.sub(r"\s+", "_", name)
+    name = re.sub(r"[^A-Za-z0-9_]", "", name)
+
+    return name
 
 
 def fetch_fund_data(year):
@@ -59,11 +70,7 @@ month_key_map = {
 
 def download_file(file_url, save_dir, fund_name, month, year):
 
-
-    # Standardized File Name
     std_name = f"{fund_name}_{month}_{year}.xlsx"
-    std_name = std_name.replace(" ", "_")
-
     save_path = os.path.join(save_dir, std_name)
 
     if os.path.exists(save_path):
@@ -73,6 +80,7 @@ def download_file(file_url, save_dir, fund_name, month, year):
     print("Downloading:", std_name)
 
     try:
+
         r = requests.get(file_url, timeout=60)
 
         if r.status_code == 200:
@@ -87,7 +95,6 @@ def download_file(file_url, save_dir, fund_name, month, year):
 
     except Exception as e:
         print("Error:", std_name, "|", e)
-
 
 
 def run_backfill():
@@ -112,6 +119,7 @@ def run_backfill():
     fund_data_all = {}
 
     for year in years_needed:
+
         print(f"Fetching API → {year}")
         fund_data_all[year] = fetch_fund_data(year)
 
@@ -121,7 +129,9 @@ def run_backfill():
 
         for fund in funds:
 
-            fund_name = fund["Name"].replace(" ", "_")
+            fund_name_raw = fund.get("Name", "")
+            fund_name = clean_fund_name(fund_name_raw)
+
             fund_dir = os.path.join(save_dir, fund_name)
             os.makedirs(fund_dir, exist_ok=True)
 
@@ -145,7 +155,6 @@ def run_backfill():
                     mon,
                     yr
                 )
-
 
     print("\nBackfill completed.")
 
