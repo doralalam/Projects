@@ -17,7 +17,7 @@ print("🔎 Fetching disclosure metadata...")
 r = requests.get(API, headers=headers)
 
 if r.status_code != 200:
-    print("❌ Blocked:", r.status_code)
+    print("Blocked:", r.status_code)
     exit()
 
 data = r.json()
@@ -50,7 +50,7 @@ for name, url in downloads:
     if os.path.exists(path):
         continue
 
-    print("⬇️", name)
+    print(name)
 
     try:
         res = requests.get(url, headers=headers, timeout=30)
