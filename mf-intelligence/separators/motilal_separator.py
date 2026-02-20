@@ -3,43 +3,74 @@ import pandas as pd
 import re
 
 # Paths
-DATA_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/edelweiss"
-OUTPUT_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/separated_files/edelweiss"
+DATA_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal"
+OUTPUT_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/separated_files/motilal"
 
 os.makedirs(OUTPUT_PATH, exist_ok=True)
 
 # Fund mapping
 FUND_MAP = {
-    "EEECRF": "Edelweiss_Flexi_Cap_Fund",
-    "EECONF": "Edelweiss_Consumption_Fund",
-    "EEESSF": "Edelweiss_Equity_Savings_Fund",
-    "EEEQTF": "Edelweiss_Large_and_Mid_Cap_Fund",
-    "EEMAAF": "Edelweiss_Multi_Asset_Allocation_Fund",
-    "EEARFD": "Edelweiss_Balanced_Advantage_Fund",
-    "EEELSS": "Edelweiss_ELSS_Tax_Saver_Fund",
-    "EEFOCF": "Edelweiss_Focused_Fund",
-    "EEBCYF": "Edelweiss_Business_Cycle_Fund",
-    "EEDGEF": "Edelweiss_Large_Cap_Fund",
-    "EEARBF": "Edelweiss_Arbitrage_Fund",
-    "EEPRUA": "Edelweiss_Aggressive_Hybrid_Fund",
-    "EEESCF": "Edelweiss_Small_Cap_Fund",
-    "EEEMCF": "Edelweiss_Mid_Cap_Fund",
-    "EETECF": "Edelweiss_Technology_Fund"
+    "YO20": "Motilal Oswal Large and Midcap Fund",
+    "YO07": "Motilal Oswal Midcap Fund",
+    "YO46": "Motilal Oswal Small Cap Fund",
+    "YO05": "Motilal Oswal Focused Fund",
+    "YO08": "Motilal Oswal Flexi Cap Fund",
+    "YO47": "Motilal Oswal Large Cap Fund",
+    "YO09": "Motilal Oswal ELSS Tax Saver Fund",
+    "YO10": "Motilal Oswal Balanced Advantage Fund",
+    "YO50": "Motilal Oswal Quant Fund",
+    "YO51": "Motilal Oswal Multicap Fund",
+    "YO53": "Motilal Oswal Manufacturing Fund",
+    "Y054": "Motilal Oswal Business Cycle Fund",
+    "YO58": "Motilal Oswal Digital India Fund",
+    "YO65": "Motilal Oswal Innovation Opportunities Fund",
+    "YO66": "Motilal Oswal Active Momentum Fund",
+    "YO68": "Motilal Oswal Infrastructure Fund",
+    "YO72": "Motilal Oswal Services Fund",
+    "YO80": "Motilal Oswal Special Opportunities Fund",
+    "YO82": "Motilal Oswal Consumption Fund"
 }
 
 
 def extract_date_parts(file_name):
     """
-    Extract Month (3 chars) + Year
-    Example: 31-Jan-2026 → Jan, 2026
+    Extract Month (3-letter format) + Year
+    Example:
+    b5209-scheme-portfolio-details-january-2026-2-
+    → Jan, 2026
     """
-    match = re.search(r"\d{2}-([A-Za-z]{3})-(\d{4})", file_name)
+
+    match = re.search(
+        r'(january|february|march|april|may|june|july|august|september|october|november|december)-(\d{4})',
+        file_name,
+        re.IGNORECASE
+    )
 
     if not match:
         return "UNK", "0000"
 
-    month, year = match.groups()
+    month_full = match.group(1).lower()
+    year = match.group(2)
+
+    month_map = {
+        "january": "Jan",
+        "february": "Feb",
+        "march": "Mar",
+        "april": "Apr",
+        "may": "May",
+        "june": "Jun",
+        "july": "Jul",
+        "august": "Aug",
+        "september": "Sep",
+        "october": "Oct",
+        "november": "Nov",
+        "december": "Dec"
+    }
+
+    month = month_map.get(month_full, "UNK")
+
     return month, year
+
 
 
 # find Header
@@ -58,7 +89,7 @@ def find_header_row(file_path, sheet_name):
     for i, row in temp_df.iterrows():
 
         if row.astype(str).str.contains(
-            "Name of the Instrument",
+            "Name of Instrument",
             case=False,
             na=False
         ).any():
@@ -76,14 +107,17 @@ def clean_portfolio_dataframe(df):
     # Drop fully empty rows
     df = df.dropna(how="all")
 
-    if "Name of the Instrument" not in df.columns:
+    if "Name of Instrument" not in df.columns:
         return df
 
-    df = df[df["Name of the Instrument"].notna()]
+    df = df[df["Name of Instrument"].notna()]
+
+    if "ISIN" in df.columns:
+        df = df[df["ISIN"].notna()]
 
     # Remove section/category headers
     df = df[
-        ~df["Name of the Instrument"]
+        ~df["Name of Instrument"]
         .str.contains(
             "Equity|Debt|Mutual Fund|TREPS|Cash|Derivatives|Total",
             case=False,
@@ -96,21 +130,10 @@ def clean_portfolio_dataframe(df):
 
         col = "% to Net Assets"
 
-        df[col] = (
-            df[col]
-            .astype(str)
-            .str.replace("%", "", regex=False)
-            .str.replace(",", "", regex=False)
-        )
-
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
-        # Row-level scaling
-        df[col] = df[col].apply(
-            lambda x: x * 100 if pd.notna(x) and x <= 1 else x
-        )
+        df[col] = (df[col] * 100).round(4)
 
-        df[col] = df[col].round(4)
 
     return df.reset_index(drop=True)
 
@@ -169,4 +192,4 @@ for file in os.listdir(DATA_PATH):
     except Exception as e:
         print(f"Failed -> {file} | {e}")
 
-print("\nEdelweiss separation completed.")
+print("\nMotilal separation completed.")
