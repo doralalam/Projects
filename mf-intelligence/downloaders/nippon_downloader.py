@@ -24,7 +24,7 @@ def generate_reporting_months(n_months=12):
         month_end = date + relativedelta(day=31)
 
         day = month_end.strftime("%d")
-        month_short = month_end.strftime("%b")  # Jan
+        month_short = month_end.strftime("%b")  # Jan, Feb
         year_short = month_end.strftime("%y")   # 26
 
         months.append((day, month_short, year_short))
