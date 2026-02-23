@@ -10,7 +10,7 @@ FILE_PATTERN = "NIMF-MONTHLY-PORTFOLIO-{day}-{month}-{year}.xls"
 
 def generate_reporting_months(n_months=12):
     """
-    Generate last N reporting months.
+    Generate last 12 reporting months.
     Reporting month = previous calendar month.
     """
     months = []
