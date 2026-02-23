@@ -5,36 +5,55 @@ from dateutil.relativedelta import relativedelta
 
 
 BASE_URL = "https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/"
-FILE_PATTERN = "NIMF-MONTHLY-PORTFOLIO-{day}-{month}-{year}.xls"
+
+# Month formatting rules
+FULL_MONTHS = {
+    "Apr": "April",
+    "Jun": "June",
+    "Jul": "July",
+}
+
+NO_DATE_CASES = {
+    ("Nov", "25"),  # November 2025 special case
+}
 
 
 def generate_reporting_months(n_months=12):
-    """
-    Generate last 12 reporting months.
-    Reporting month = previous calendar month.
-    """
-    months = []
 
+    months = []
     start_date = datetime.today() - relativedelta(months=1)
 
     for i in range(n_months):
 
         date = start_date - relativedelta(months=i)
-
         month_end = date + relativedelta(day=31)
 
         day = month_end.strftime("%d")
-        month_short = month_end.strftime("%b")  # Jan, Feb
-        year_short = month_end.strftime("%y")   # 26
+        month_short = month_end.strftime("%b")
+        month_full = month_end.strftime("%B")
+        year_short = month_end.strftime("%y")
 
-        months.append((day, month_short, year_short))
+        months.append((day, month_short, month_full, year_short))
 
     return months
 
 
-def download_file(url, save_path):
+def build_filename(day, month_short, month_full, year_short):
 
-    print("Trying:", os.path.basename(save_path))
+    # Case 1: No date case
+    if (month_short, year_short) in NO_DATE_CASES:
+        return f"NIMF-MONTHLY-PORTFOLIO-{month_full}-{year_short}.xls"
+
+    # Case 2: Full month required
+    if month_short in FULL_MONTHS:
+        month_name = FULL_MONTHS[month_short]
+    else:
+        month_name = month_short
+
+    return f"NIMF-MONTHLY-PORTFOLIO-{day}-{month_name}-{year_short}.xls"
+
+
+def download_file(url, save_path):
 
     try:
         r = requests.get(url, timeout=60)
@@ -62,18 +81,17 @@ def run_backfill():
 
     print("\nDownloading Nippon Monthly Portfolios...\n")
 
-    for day, month, year in months:
+    for day, mon_short, mon_full, yr in months:
 
-        file_name = FILE_PATTERN.format(
-            day=day,
-            month=month,
-            year=year
-        )
+        file_name = build_filename(day, mon_short, mon_full, yr)
 
         url = BASE_URL + file_name
         save_path = os.path.join(save_dir, file_name)
 
-        download_file(url, save_path)
+        print("Trying:", file_name)
+
+        if not download_file(url, save_path):
+            print("Not found:", file_name)
 
     print("\nNippon Backfill completed.")
 
