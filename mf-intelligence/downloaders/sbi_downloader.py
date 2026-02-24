@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 BASE_URL = "https://www.sbimf.com/docs/default-source/scheme-portfolios/"
 
-# Try both patterns
+# Try both the patterns
 URL_PATTERNS = [
     "all-schemes-monthly-portfolio---as-on-{day}-{month}-{year}.xlsx",
     "all-scheme-monthly-portfolio---as-on-{day}-{month}-{year}.xlsx"
