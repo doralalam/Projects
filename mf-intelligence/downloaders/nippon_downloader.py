@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 BASE_URL = "https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/"
 
 
-# Months that historically use full name
+# months with FULL NAMES
 FULL_MONTHS = {
     "Apr": "April",
     "Jun": "June",
