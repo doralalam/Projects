@@ -105,7 +105,7 @@ def run_backfill():
         if not downloaded:
             print(f"Not found for {short_mon} {yr}")
 
-    print("\nNippon Backfill completed.")
+    print("\nNippon Backfill completed")
 
 
 if __name__ == "__main__":
