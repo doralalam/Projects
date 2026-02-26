@@ -50,7 +50,7 @@ def build_candidate_filenames(day, mon_short, mon_full, yr):
     if mon_short in FULL_MONTHS:
         candidates.append(f"NIMF-MONTHLY-PORTFOLIO-{day}-{FULL_MONTHS[mon_short]}-{yr}.xls")
     else:
-        # also try full month anyway
+        # also try full month
         candidates.append(f"NIMF-MONTHLY-PORTFOLIO-{day}-{mon_full}-{yr}.xls")
 
     # without date and short month
