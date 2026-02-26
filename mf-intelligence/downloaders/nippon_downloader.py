@@ -43,7 +43,7 @@ def build_candidate_filenames(day, mon_short, mon_full, yr):
 
     candidates = []
 
-    # with date and month
+    # with date and short month
     candidates.append(f"NIMF-MONTHLY-PORTFOLIO-{day}-{mon_short}-{yr}.xls")
 
     # with date and full month (if in FULL_MONTHS)
