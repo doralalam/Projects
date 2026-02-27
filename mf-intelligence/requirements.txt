@@ -5,3 +5,4 @@ pdfplumber
 openpyxl
 selenium
 webdriver_manager
+xlrd
