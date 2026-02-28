@@ -30,7 +30,7 @@ def generate_months(n_months=12):
         month_end = date + relativedelta(day=31)
 
         day = month_end.day
-        month_full = month_end.strftime("%B").lower()
+        month_full = month_end.strftime("%B")
         year = month_end.strftime("%Y")
 
         months.append((day, month_full, year))
