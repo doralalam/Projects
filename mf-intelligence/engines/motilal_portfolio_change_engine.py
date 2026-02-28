@@ -3,9 +3,8 @@ import pandas as pd
 import re
 
 
-# File Paths
-DATA_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/invesco"
-OUTPUT_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/processed/invesco"
+DATA_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/separated_files/motilal"
+OUTPUT_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/processed/motilal"
 
 os.makedirs(OUTPUT_PATH, exist_ok=True)
 
@@ -13,8 +12,6 @@ MONTH_ORDER = ["Jan","Feb","Mar","Apr","May","Jun",
                "Jul","Aug","Sep","Oct","Nov","Dec"]
 
 
-
-# Extract Month-Year
 
 def extract_month_year(filename):
 
@@ -33,43 +30,108 @@ def extract_month_year(filename):
 
 
 
-# Load Equity + Industry
+def find_header_row(file_path):
+
+    temp_df = pd.read_excel(file_path, header=None)
+
+    for i, row in temp_df.iterrows():
+        if row.astype(str).str.contains(
+            "Name of the Instrument",
+            case=False,
+            na=False
+        ).any():
+            return i
+
+    return 0
+
+
+
 def load_equity(file_path, col_name):
 
-    df = pd.read_excel(file_path, skiprows=4)
-    df.columns = df.columns.str.strip()
+    temp_df = pd.read_excel(file_path, header=None)
 
-    # Detect Industry column dynamically
-    industry_col = None
-    for col in df.columns:
-        if "industry" in col.lower() or "sector" in col.lower():
-            industry_col = col
+    header_row = None
+
+    for i in range(len(temp_df)):
+        row_values = temp_df.iloc[i].astype(str).str.lower()
+
+        if any("name of instrument" in str(val) for val in row_values):
+            header_row = i
             break
 
+    if header_row is None:
+        raise Exception("Header row not found")
+
+    df = pd.read_excel(file_path, header=header_row)
+    df.columns = df.columns.str.strip()
+
+    isin_col = None
+    name_col = None
+    weight_col = None
+    industry_col = None
+
+    for col in df.columns:
+
+        col_lower = col.lower()
+
+        if "isin" in col_lower:
+            isin_col = col
+
+        elif "name of instrument" in col_lower:
+            name_col = col
+
+        elif "% to net assets" in col_lower:
+            weight_col = col
+
+        elif "rating / industry" in col_lower:
+            industry_col = col
+
+    if not isin_col:
+        raise Exception("ISIN column not found")
+
+    if not name_col:
+        raise Exception("Name column not found")
+
+    if not weight_col:
+        raise Exception("Weight column not found")
+
+
+    df[weight_col] = (
+        df[weight_col]
+        .astype(str)
+        .str.replace("%", "", regex=False)
+    )
+
+    df[weight_col] = pd.to_numeric(df[weight_col], errors="coerce")
+
+
+    df_equity = df[
+        df[isin_col]
+        .astype(str)
+        .str.match(r'^INE.*\d{5}$', na=False)
+    ]
+
+    columns_needed = [isin_col, name_col, weight_col]
+
+    if industry_col:
+        columns_needed.append(industry_col)
+
+    df_equity = df_equity[columns_needed]
+
+
     rename_map = {
-        "Name of the Instrument": "Stock Name",
-        "% to Net Assets": col_name
+        isin_col: "ISIN",
+        name_col: "Stock Name",
+        weight_col: col_name
     }
 
     if industry_col:
         rename_map[industry_col] = "Industry"
 
-    df = df.rename(columns=rename_map)
-
-    # Filter only equity ISINs
-    df_equity = df[df['ISIN'].astype(str).str.match(r'^INE.*\d{5}$', na=False)]
-
-    columns_needed = ["ISIN", "Stock Name", col_name]
-
-    if "Industry" in df_equity.columns:
-        columns_needed.append("Industry")
-
-    df_equity = df_equity[columns_needed]
+    df_equity = df_equity.rename(columns=rename_map)
 
     return df_equity
 
-
-# Sorting
 def get_files_for_fund(fund_folder):
 
     files = [f for f in os.listdir(fund_folder) if f.endswith(".xlsx")]
@@ -87,9 +149,6 @@ def get_files_for_fund(fund_folder):
     return sorted(files, key=sort_key)
 
 
-# ----------------------------------
-# Status Logic (Conviction Removed)
-# ----------------------------------
 def determine_status(row, latest_col, prev_col, quarter_col):
 
     latest = row[latest_col]
@@ -119,7 +178,6 @@ def determine_status(row, latest_col, prev_col, quarter_col):
 
     else:
         return "Stable"
-
 
 
 fund_folders = [
@@ -162,18 +220,15 @@ for fund in fund_folders:
     df_prev = load_equity(prev_file, prev_col)
     df_quarter = load_equity(quarter_file, quarter_col)
 
-    # Merge
     df_merged = pd.merge(df_latest, df_prev, on="ISIN", how="outer", suffixes=("_latest", "_prev"))
     df_merged = pd.merge(df_merged, df_quarter, on="ISIN", how="outer")
 
-    # Stock name stitching
     df_merged['Stock Name'] = (
         df_merged.get('Stock Name_latest')
         .combine_first(df_merged.get('Stock Name_prev'))
         .combine_first(df_merged.get('Stock Name'))
     )
 
-    # Industry stitching
     if 'Industry_latest' in df_merged.columns:
         df_merged['Industry'] = (
             df_merged.get('Industry_latest')
@@ -181,7 +236,10 @@ for fund in fund_folders:
             .combine_first(df_merged.get('Industry'))
         )
 
-    df_merged = df_merged.fillna(0)
+    df_merged[[latest_col, prev_col, quarter_col]] = (
+        df_merged[[latest_col, prev_col, quarter_col]]
+        .fillna(0)
+    )
 
     df_merged['MoM'] = df_merged[latest_col] - df_merged[prev_col]
     df_merged['QoQ'] = df_merged[latest_col] - df_merged[quarter_col]
@@ -218,4 +276,4 @@ for fund in fund_folders:
 
     print(f"Processed {fund} -> {len(df_final)} rows")
 
-print("\nAll Invesco funds processed successfully!")
+print("\nAll Motilal funds processed successfully!")
