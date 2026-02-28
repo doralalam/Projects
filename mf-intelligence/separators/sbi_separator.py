@@ -52,9 +52,7 @@ FUND_MAP = {
 }
 
 
-# -----------------------------
-# DATE EXTRACTION
-# -----------------------------
+
 def extract_date_parts(file_name):
 
     match = re.search(
@@ -79,9 +77,7 @@ def extract_date_parts(file_name):
     return month_map.get(month_full, "UNK"), year
 
 
-# -----------------------------
-# HEADER DETECTION
-# -----------------------------
+
 def find_header_row(file_path, sheet_name):
 
     temp_df = pd.read_excel(file_path, sheet_name=sheet_name, header=None)
@@ -95,9 +91,6 @@ def find_header_row(file_path, sheet_name):
     return None
 
 
-# -----------------------------
-# STRICT CLEANING FUNCTION
-# -----------------------------
 def clean_portfolio_dataframe(df):
 
     df = df.copy()
@@ -133,7 +126,7 @@ def clean_portfolio_dataframe(df):
     # Reset index
     df.reset_index(drop=True, inplace=True)
 
-    # Optional: Keep only important columns
+    # Keep only important columns
     required_cols = [
         "Name of the Instrument / Issuer",
         "ISIN",
@@ -147,10 +140,6 @@ def clean_portfolio_dataframe(df):
 
     return df
 
-
-# -----------------------------
-# MAIN PROCESS
-# -----------------------------
 for file in os.listdir(DATA_PATH):
 
     if not file.endswith(".xlsx"):
