@@ -2,9 +2,7 @@ import os
 import pandas as pd
 
 # Paths
-
 BASE_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data"
-
 AMC = "quant"
 
 PROCESSED_PATH = os.path.join(BASE_PATH, "processed", AMC)
@@ -12,8 +10,24 @@ OUTPUT_FILE = os.path.join(BASE_PATH, "masters", AMC, f"{AMC}_master_report.xlsx
 
 os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
 
-# Load all processed files
 
+def format_fund_name(name):
+
+    abbreviations = {"ESG", "ETF", "PSU", "FOF", "ELSS"}
+
+    words = name.split()
+    formatted_words = []
+
+    for word in words:
+        if word.upper() in abbreviations:
+            formatted_words.append(word.upper())
+        else:
+            formatted_words.append(word.capitalize())
+
+    return " ".join(formatted_words)
+
+
+# Load processed files
 files = [
     f for f in os.listdir(PROCESSED_PATH)
     if f.endswith("_Equity_Holdings_Comparison.xlsx")
@@ -28,12 +42,19 @@ df_list = []
 for file in files:
     file_path = os.path.join(PROCESSED_PATH, file)
     df = pd.read_excel(file_path)
+
+    if df.empty:
+        continue
+
     df_list.append(df)
 
-# Combine all funds
+if len(df_list) == 0:
+    print("All processed files are empty.")
+    exit()
+
 df_master = pd.concat(df_list, ignore_index=True)
 
-fixed_cols = ['ISIN','Stock Name','Mutual Fund','Status','MoM','QoQ']
+fixed_cols = ['ISIN','Stock Name','Industry','Mutual Fund','Status','MoM','QoQ']
 
 month_cols = [
     col for col in df_master.columns
@@ -48,7 +69,6 @@ third_last_col = month_cols_sorted[2] if len(month_cols_sorted) > 2 else None
 
 df_master[month_cols] = df_master[month_cols].fillna(0)
 
-# Status Logic
 
 def determine_status(latest, prev, quarter, mom, qoq):
 
@@ -67,42 +87,11 @@ def determine_status(latest, prev, quarter, mom, qoq):
     else:
         return "Stable"
 
-# Fund Conviction
 
-def calculate_fund_conviction(latest, mom, qoq):
-
-    mom_score = max(mom, 0)
-    qoq_score = max(qoq, 0)
-
-    conviction = (
-        latest * 0.6 +
-        mom_score * 0.2 +
-        qoq_score * 0.2
-    )
-
-    return conviction
-
-# AMC Conviction
-
-def calculate_amc_conviction(latest, mom, qoq, fund_count):
-
-    momentum = max(mom, 0)
-    consistency = max(qoq, 0)
-
-    conviction = (
-        latest * 0.5 +
-        momentum * 0.2 +
-        consistency * 0.2 +
-        fund_count * 2
-    )
-
-    return conviction
-
-# Stock totals
 
 stock_totals = (
     df_master
-    .groupby(['ISIN','Stock Name'])[latest_col]
+    .groupby(['ISIN','Stock Name','Industry'])[latest_col]
     .sum()
     .reset_index()
     .sort_values(by=latest_col, ascending=False)
@@ -114,6 +103,7 @@ for _, stock_row in stock_totals.iterrows():
 
     isin = stock_row['ISIN']
     stock = stock_row['Stock Name']
+    industry = stock_row['Industry']
 
     group = df_master[
         (df_master['ISIN'] == isin) &
@@ -127,8 +117,6 @@ for _, stock_row in stock_totals.iterrows():
     mom_total = total_latest - total_prev
     qoq_total = total_latest - total_third
 
-    fund_count = group[group[latest_col] > 0].shape[0]
-
     status_total = determine_status(
         total_latest,
         total_prev,
@@ -137,19 +125,13 @@ for _, stock_row in stock_totals.iterrows():
         qoq_total
     )
 
-    conviction_total = calculate_amc_conviction(
-        total_latest,
-        mom_total,
-        qoq_total,
-        fund_count
-    )
-
+    # -------- TOTAL ROW --------
     output_rows.append({
         "ISIN": isin,
         "Stock Name": stock,
-        "Mutual Fund": "Quant (Total)",
+        "Industry": industry,
+        "Mutual Fund": format_fund_name(f"{AMC} mutual fund"),
         "Status": status_total,
-        "Conviction Score": conviction_total,
         "Latest %": total_latest,
         "Previous %": total_prev,
         "3rd Last %": total_third,
@@ -157,6 +139,7 @@ for _, stock_row in stock_totals.iterrows():
         "QoQ": qoq_total
     })
 
+    # -------- FUND LEVEL ROWS --------
     group_sorted = group.sort_values(by=latest_col, ascending=False)
 
     for _, row in group_sorted.iterrows():
@@ -176,18 +159,14 @@ for _, stock_row in stock_totals.iterrows():
             qoq
         )
 
-        fund_conviction = calculate_fund_conviction(
-            latest_val,
-            mom,
-            qoq
-        )
+        formatted_name = format_fund_name(row['Mutual Fund'])
 
         output_rows.append({
             "ISIN": "",
             "Stock Name": "",
-            "Mutual Fund": "   " + row['Mutual Fund'],
+            "Industry": "",
+            "Mutual Fund": "   " + formatted_name,
             "Status": status_fund,
-            "Conviction Score": fund_conviction,
             "Latest %": latest_val,
             "Previous %": prev_val,
             "3rd Last %": third_val,
@@ -195,7 +174,21 @@ for _, stock_row in stock_totals.iterrows():
             "QoQ": qoq
         })
 
+
 final_df = pd.DataFrame(output_rows)
+
+
+final_df = final_df.rename(columns={
+    "Stock Name": "Company Name",
+    "Industry": "Sector",
+    "Mutual Fund": "Fund Name",
+    "Status": "Holding Action",
+    "Latest %": "Current Allocation (%)",
+    "Previous %": "Previous Allocation (%)",
+    "3rd Last %": "Quarter Allocation (%)",
+    "MoM": "MoM Change (%)",
+    "QoQ": "QoQ Change (%)"
+})
 
 final_df.to_excel(OUTPUT_FILE, index=False)
 
