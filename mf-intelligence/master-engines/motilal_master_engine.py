@@ -3,7 +3,7 @@ import pandas as pd
 
 
 BASE_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data"
-AMC = "edelweiss"
+AMC = "motilal"
 
 PROCESSED_PATH = os.path.join(BASE_PATH, "processed", AMC)
 MASTER_OUTPUT = os.path.join(BASE_PATH, "masters", AMC, f"{AMC}_master_report.xlsx")
@@ -51,7 +51,6 @@ if not all_dfs:
 
 
 full_df = pd.concat(all_dfs, ignore_index=True)
-
 
 
 fixed_cols = [
