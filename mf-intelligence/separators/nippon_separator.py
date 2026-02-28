@@ -10,7 +10,6 @@ OUTPUT_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/separat
 os.makedirs(OUTPUT_PATH, exist_ok=True)
 
 
-
 FUND_MAP = {
     "GF": "Nippon India Growth Mid Cap Fund",
     "GS": "Nippon India Vision Large & Mid Cap Fund",
@@ -21,7 +20,7 @@ FUND_MAP = {
     "NE": "Nippon India Balanced Advantage Fund",
     "EO": "Nippon India Multi Cap Fund",
     "SE": "Nippon India Value Fund",
-    'SH': "Nippon India Aggressive Hybrid Fund",
+    "SH": "Nippon India Aggressive Hybrid Fund",
     "TS": "Nippon India ELSS Tax Saver Fund",
     "LE": "Nippon India Focused Fund",
     "EA": "Nippon India Large Cap Fund",
@@ -33,21 +32,17 @@ FUND_MAP = {
     "IT": "Nippon India Innovation Fund",
     "AM": "Nippon India Active Momentum Fund",
     "QI": "Nippon India Nifty 500 Quality 50 Index Fund",
-    "MC": "Nippon India MNC Fund"   
+    "MC": "Nippon India MNC Fund"
 }
 
 
-# Date Extraction
+# ---------------------------------------------------
+# DATE EXTRACTION (Robust)
+# ---------------------------------------------------
 def extract_date_parts(file_name):
-    """
-    Extract Month + Year from filenames like:
-    - NIMF-MONTHLY-PORTFOLIO-31-Jan-26.xls
-    - NIMF-MONTHLY-PORTFOLIO-30-April-25.xls
-    - NIMF-MONTHLY-PORTFOLIO-Nov-25.xls
-    """
 
     match = re.search(
-        r'(Jan|Feb|Mar|Apr|April|May|Jun|June|Jul|July|Aug|Sep|Oct|Nov|November|Dec)-(\d{2})',
+        r'(Jan|Feb|Mar|Apr|April|May|Jun|June|Jul|July|Aug|Sep|Oct|Nov|November|Dec)[-\s](\d{2})',
         file_name,
         re.IGNORECASE
     )
@@ -59,38 +54,30 @@ def extract_date_parts(file_name):
     year_short = match.group(2)
 
     month_map = {
-        "Jan": "Jan",
-        "Feb": "Feb",
-        "Mar": "Mar",
-        "Apr": "Apr",
-        "April": "Apr",
+        "Jan": "Jan", "Feb": "Feb", "Mar": "Mar",
+        "Apr": "Apr", "April": "Apr",
         "May": "May",
-        "Jun": "Jun",
-        "June": "Jun",
-        "Jul": "Jul",
-        "July": "Jul",
-        "Aug": "Aug",
-        "Sep": "Sep",
+        "Jun": "Jun", "June": "Jun",
+        "Jul": "Jul", "July": "Jul",
+        "Aug": "Aug", "Sep": "Sep",
         "Oct": "Oct",
-        "Nov": "Nov",
-        "November": "Nov",
+        "Nov": "Nov", "November": "Nov",
         "Dec": "Dec",
     }
 
     month = month_map.get(month_raw, "UNK")
-
-    # Convert 2-digit year → 4-digit year
     year = "20" + year_short
 
     return month, year
 
 
-# .xls and .xlsx handler
+# ---------------------------------------------------
+# Robust Excel Loader
+# ---------------------------------------------------
 def load_excel_file(file_path):
     try:
         return pd.ExcelFile(file_path)
     except Exception:
-        # Fallback for mislabelled files
         return pd.ExcelFile(file_path, engine="openpyxl")
 
 
@@ -101,7 +88,9 @@ def read_excel_safe(file_path, sheet_name, header_row):
         return pd.read_excel(file_path, sheet_name=sheet_name, header=header_row, engine="openpyxl")
 
 
-# To find the header
+# ---------------------------------------------------
+# HEADER DETECTION (Improved)
+# ---------------------------------------------------
 def find_header_row(file_path, sheet_name):
 
     try:
@@ -110,19 +99,44 @@ def find_header_row(file_path, sheet_name):
         temp_df = pd.read_excel(file_path, sheet_name=sheet_name, header=None, engine="openpyxl")
 
     for i, row in temp_df.iterrows():
-        if row.astype(str).str.contains(
-            "Name of the Instrument",
-            case=False,
-            na=False
-        ).any():
+        row_str = row.astype(str).str.lower()
+
+        if (
+            any("isin" in val for val in row_str) and
+            any("name of the instrument" in val for val in row_str)
+        ):
             return i
 
     return None
 
 
+# ---------------------------------------------------
+# CLEAN PORTFOLIO DATA
+# ---------------------------------------------------
 def clean_portfolio_dataframe(df):
 
     df = df.dropna(how="all")
+    df.columns = df.columns.str.strip()
+
+    # Normalize column names
+    rename_map = {}
+
+    for col in df.columns:
+        col_lower = col.lower()
+
+        if "name of the instrument" in col_lower:
+            rename_map[col] = "Name of the Instrument"
+
+        elif col_lower.strip() == "isin":
+            rename_map[col] = "ISIN"
+
+        elif "% to nav" in col_lower:
+            rename_map[col] = "% to NAV"
+
+        elif "industry" in col_lower:
+            rename_map[col] = "Industry"
+
+    df = df.rename(columns=rename_map)
 
     if "Name of the Instrument" not in df.columns:
         return df
@@ -130,11 +144,15 @@ def clean_portfolio_dataframe(df):
     # Remove blank rows
     df = df[df["Name of the Instrument"].notna()]
 
-    # Remove rows without ISIN (real holdings filter)
+    # Keep only valid ISIN rows (equity filter)
     if "ISIN" in df.columns:
-        df = df[df["ISIN"].notna()]
+        df = df[
+            df["ISIN"]
+            .astype(str)
+            .str.match(r'^INE[A-Z0-9]{9}$', na=False)
+        ]
 
-    # Remove category/summary rows
+    # Remove category rows
     df = df[
         ~df["Name of the Instrument"]
         .str.contains(
@@ -147,10 +165,12 @@ def clean_portfolio_dataframe(df):
     return df.reset_index(drop=True)
 
 
-
+# ---------------------------------------------------
+# MAIN LOOP
+# ---------------------------------------------------
 for file in os.listdir(DATA_PATH):
 
-    if not file.endswith(".xls"):
+    if not (file.endswith(".xls") or file.endswith(".xlsx")):
         continue
 
     file_path = os.path.join(DATA_PATH, file)
@@ -194,4 +214,4 @@ for file in os.listdir(DATA_PATH):
     except Exception as e:
         print(f"Failed -> {file} | {e}")
 
-print("\nNippon separation completed.")
+print("\nNippon separation completed successfully.")
