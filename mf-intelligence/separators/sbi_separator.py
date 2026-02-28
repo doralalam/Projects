@@ -8,7 +8,7 @@ OUTPUT_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/separat
 
 os.makedirs(OUTPUT_PATH, exist_ok=True)
 
-# Fund mapping
+
 FUND_MAP = {
     "SLMF": "SBI Large and Midcap Fund",
     "SLTEF": "SBI ELSS Tax Saver Fund",
@@ -52,16 +52,13 @@ FUND_MAP = {
 }
 
 
+# -----------------------------
+# DATE EXTRACTION
+# -----------------------------
 def extract_date_parts(file_name):
-    """
-    Extract Month (3-letter format) + Year
-    Example:
-    b5209-scheme-portfolio-details-january-2026-2-
-    → Jan, 2026
-    """
 
     match = re.search(
-        r'(january|february|march|april|may|june|july|august|september|october|november|december)-(\d{4})',
+        r'(january|february|march|apil|april|may|june|july|august|september|october|november|december)-(\d{4})',
         file_name,
         re.IGNORECASE
     )
@@ -73,83 +70,87 @@ def extract_date_parts(file_name):
     year = match.group(2)
 
     month_map = {
-        "january": "Jan",
-        "february": "Feb",
-        "march": "Mar",
-        "april": "Apr",
-        "may": "May",
-        "june": "Jun",
-        "july": "Jul",
-        "august": "Aug",
-        "september": "Sep",
-        "october": "Oct",
-        "november": "Nov",
-        "december": "Dec"
+        "january": "Jan", "february": "Feb", "march": "Mar",
+        "april": "Apr", "may": "May", "june": "Jun",
+        "july": "Jul", "august": "Aug", "september": "Sep",
+        "october": "Oct", "november": "Nov", "december": "Dec"
     }
 
-    month = month_map.get(month_full, "UNK")
-
-    return month, year
+    return month_map.get(month_full, "UNK"), year
 
 
-
-# find Header
+# -----------------------------
+# HEADER DETECTION
+# -----------------------------
 def find_header_row(file_path, sheet_name):
-    """
-    Detect header row dynamically
-    by locating 'Name of the Instrument'
-    """
 
-    temp_df = pd.read_excel(
-        file_path,
-        sheet_name=sheet_name,
-        header=None
-    )
+    temp_df = pd.read_excel(file_path, sheet_name=sheet_name, header=None)
 
     for i, row in temp_df.iterrows():
+        row_str = row.astype(str).str.lower()
 
-        if row.astype(str).str.contains(
-            "Name of the Instrument / Issuer",
-            case=False,
-            na=False
-        ).any():
+        if row_str.str.contains("name of the instrument").any():
             return i
 
     return None
 
 
-
+# -----------------------------
+# STRICT CLEANING FUNCTION
+# -----------------------------
 def clean_portfolio_dataframe(df):
-    """
-    Cleans category rows & fixes % column
-    """
+
+    df = df.copy()
+
+    # Strip column names
+    df.columns = df.columns.str.strip()
 
     # Drop fully empty rows
-    df = df.dropna(how="all")
+    df.dropna(how="all", inplace=True)
 
-    if "Name of the Instrument / Issuer" not in df.columns:
-        return df
+    # Must contain ISIN column
+    if "ISIN" not in df.columns:
+        return pd.DataFrame()
 
-    df = df[df["Name of the Instrument / Issuer"].notna()]
+    # Remove rows without ISIN
+    df = df[df["ISIN"].notna()]
 
-    if "ISIN" in df.columns:
-        df = df[df["ISIN"].notna()]
+    # Strict ISIN validation (12-character alphanumeric)
+    df = df[df["ISIN"].astype(str).str.match(r"^[A-Z0-9]{12}$", na=False)]
 
-    # Remove section/category headers
-    df = df[
-        ~df["Name of the Instrument / Issuer"]
-        .str.contains(
-            "Equity|Debt|Mutual Fund|TREPS|Cash|Derivatives|Total",
-            case=False,
-            na=False
-        )
+    # Remove section headers
+    if "Name of the Instrument / Issuer" in df.columns:
+        df = df[
+            ~df["Name of the Instrument / Issuer"]
+            .astype(str)
+            .str.contains(
+                r"equity|debt|mutual fund|treps|cash|derivatives|total|listed",
+                case=False,
+                na=False
+            )
+        ]
+
+    # Reset index
+    df.reset_index(drop=True, inplace=True)
+
+    # Optional: Keep only important columns
+    required_cols = [
+        "Name of the Instrument / Issuer",
+        "ISIN",
+        "Rating / Industry^",
+        "Quantity",
+        "Market value\n(Rs. in Lakhs)",
+        "% to AUM"
     ]
 
+    df = df[[col for col in required_cols if col in df.columns]]
 
-    return df.reset_index(drop=True)
+    return df
 
 
-## Separate sheets
+# -----------------------------
+# MAIN PROCESS
+# -----------------------------
 for file in os.listdir(DATA_PATH):
 
     if not file.endswith(".xlsx"):
@@ -170,11 +171,10 @@ for file in os.listdir(DATA_PATH):
 
             fund_name = FUND_MAP[sheet]
 
-            # Create fund folder
             fund_folder = os.path.join(OUTPUT_PATH, fund_name)
             os.makedirs(fund_folder, exist_ok=True)
 
-            print(f"   -> Extracting {sheet} -> {fund_name}")
+            print(f"   -> Extracting {sheet}")
 
             header_row = find_header_row(file_path, sheet)
 
@@ -182,16 +182,17 @@ for file in os.listdir(DATA_PATH):
                 print(f"      Header not found -> {sheet}")
                 continue
 
-
             df = pd.read_excel(
                 file_path,
                 sheet_name=sheet,
                 header=header_row
             )
 
-       
             df = clean_portfolio_dataframe(df)
 
+            if df.empty:
+                print(f"      No valid data found -> {sheet}")
+                continue
 
             output_file = os.path.join(
                 fund_folder,
@@ -203,4 +204,4 @@ for file in os.listdir(DATA_PATH):
     except Exception as e:
         print(f"Failed -> {file} | {e}")
 
-print("\nSBI separation completed.")
+print("\nSBI separation completed successfully.")
