@@ -162,8 +162,8 @@ for _, stock_row in stock_totals.iterrows():
             "Latest %": latest_val,
             "Previous %": prev_val,
             "3rd Last %": third_val,
-            "MoM": round(mom, 2),
-            "QoQ": round(qoq, 2)
+            "MoM": mom,
+            "QoQ": qoq
         })
 
 
