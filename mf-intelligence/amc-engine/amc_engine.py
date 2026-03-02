@@ -51,7 +51,7 @@ for amc_name, df in amc_data.items():
 
         isin = str(row.get("ISIN", "")).strip()
 
-        # Checking ISIN
+        # Checking for valid ISIN
         if not isin or isin.lower() == "nan":
             i += 1
             continue
