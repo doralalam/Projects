@@ -5,7 +5,7 @@ import pandas as pd
 
 BASE_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data"
 MASTERS_PATH = os.path.join(BASE_PATH, "masters")
-OUTPUT_FILE = os.path.join(BASE_PATH, "masters", "all-AMC", "all_amc_master_report.xlsx")
+OUTPUT_FILE = os.path.join(BASE_PATH, "all-AMC", "all_amc_master_report.xlsx")
 
 
 
