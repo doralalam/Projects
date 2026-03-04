@@ -17,7 +17,7 @@ def extract_month_year(filename):
     match = re.search(
         r'(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[_\-\s](\d{4})',
         filename,
-        re.IGNORECASEc
+        re.IGNORECASE
     )
 
     if match:
