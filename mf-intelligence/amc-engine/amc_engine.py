@@ -81,7 +81,19 @@ for amc_name, df in amc_data.items():
 
         i = j
 
+unique_fund_count = {}
 
+for isin, amc_blocks in structured.items():
+    fund_names = set()
+
+    for amc_name, block in amc_blocks.items():
+        for fund in block["fund_rows"]:
+            fund_name = str(fund.get("Fund Name", "")).strip().lower()
+
+            if fund_name and fund_name != "nan":
+                fund_names.add(fund_name)
+
+    unique_fund_count[isin] = len(fund_names)
 
 
 final_rows = []
@@ -104,6 +116,11 @@ for isin, amc_blocks in structured.items():
 
         amc_row = block["amc_row"].copy()
 
+        if first_amc:
+            amc_row["Unique Fund Holders"] = unique_fund_count.get(isin, 0)
+        else:
+            amc_row["Unique Fund Holders"] = ""
+
         # Show ISIN details only once
         if not first_amc:
             amc_row["ISIN"] = ""
@@ -121,6 +138,7 @@ for isin, amc_blocks in structured.items():
             fund_copy["ISIN"] = ""
             fund_copy["Company Name"] = ""
             fund_copy["Sector"] = ""
+            fund_copy["Unique Fund Holders"] = ""
 
             final_rows.append(fund_copy)
 
@@ -129,8 +147,13 @@ for isin, amc_blocks in structured.items():
 
 final_df = pd.DataFrame(final_rows)
 
+if "Unique Fund Holders" in final_df.columns:
+    cols = list(final_df.columns)
 
-
+    if "Sector" in cols:
+        sector_index = cols.index("Sector")
+        cols.insert(sector_index + 1, cols.pop(cols.index("Unique Fund Holders")))
+        final_df = final_df[cols]
 
 numeric_cols = [
     "Current Allocation (%)",
@@ -142,8 +165,7 @@ numeric_cols = [
 
 for col in numeric_cols:
     if col in final_df.columns:
-        final_df[col] = pd.to_numeric(final_df[col], errors="coerce")
-
+        final_df[col] = pd.to_numeric(final_df[col], errors="coerce").round(2)
 
 
 
