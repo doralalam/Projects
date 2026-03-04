@@ -175,9 +175,6 @@ def determine_status(row, latest_col, prev_col, quarter_col):
         return "Stable"
 
 
-# --------------------------------------------------
-# Process all SBI Funds
-# --------------------------------------------------
 fund_folders = [
     f for f in os.listdir(DATA_PATH)
     if os.path.isdir(os.path.join(DATA_PATH, f))
