@@ -99,7 +99,7 @@ final_rows = []
 
 for isin, amc_blocks in structured.items():
 
-    # Safe sorting (handles blanks & strings)
+    # Safe sorting -handles blanks & strings
     sorted_amcs = sorted(
         amc_blocks.items(),
         key=lambda x: pd.to_numeric(
