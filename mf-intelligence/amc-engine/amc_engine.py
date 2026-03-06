@@ -120,7 +120,7 @@ for isin, amc_blocks in structured.items():
         else:
             amc_row["Unique Fund Holders"] = ""
 
-        # Show ISIN details only once
+        # Show ISIN details only once for each
         if not first_amc:
             amc_row["ISIN"] = ""
             amc_row["Company Name"] = ""
