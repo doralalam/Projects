@@ -130,7 +130,7 @@ for isin, amc_blocks in structured.items():
 
         first_amc = False
 
-        # Add fund rows
+        # Adding fund rows
         for fund in block["fund_rows"]:
 
             fund_copy = fund.copy()
