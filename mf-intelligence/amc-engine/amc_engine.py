@@ -162,7 +162,7 @@ numeric_cols = [
     "QoQ Change (%)"
 ]
 
-# rounding upto 2 decimal values
+# Rounding upto 2 decimal values
 for col in numeric_cols:
     if col in final_df.columns:
         final_df[col] = pd.to_numeric(final_df[col], errors="coerce").round(2)
