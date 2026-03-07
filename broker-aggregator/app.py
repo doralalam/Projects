@@ -245,7 +245,6 @@ def stock_detail(symbol):
 
 
 ## broker list
-
 @app.route("/brokers", methods=["GET"])
 def brokers_list():
     """
@@ -263,7 +262,6 @@ def brokers_list():
 
 
 ## broker details
-
 @app.route("/broker/<broker_name>", methods=["GET"])
 def broker_detail(broker_name):
     """
