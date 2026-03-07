@@ -9,7 +9,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 app = Flask(__name__)
 
 
-## global data cache
 
 ## Stores all broker calls
 BROKER_CALLS = []
