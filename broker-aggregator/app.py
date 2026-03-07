@@ -146,7 +146,6 @@ def sort_calls(calls, sort_key):
 
 
 ## routes
-
 @app.route("/", methods=["GET"])
 def landing():
     """
