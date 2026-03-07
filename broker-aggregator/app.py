@@ -87,7 +87,6 @@ reload_data()
 
 
 ## scheduler for auto-reload for every hour
-
 def start_scheduler():
     """
     Starts background scheduler
