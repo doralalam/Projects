@@ -112,7 +112,6 @@ start_scheduler()
 
 
 ## sorting function
-
 def sort_calls(calls, sort_key):
     """
     Sort broker calls based on selected column.
