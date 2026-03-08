@@ -201,7 +201,7 @@ def search():
         sort=sort_key
     )
 
-## ratings page
+# ratings page
 
 @app.route("/ratings", methods=["GET"])
 def ratings():
