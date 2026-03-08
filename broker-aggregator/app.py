@@ -223,7 +223,7 @@ def ratings():
     )
 
 
-## stock detail page
+# stock detail page
 @app.route("/stock/<symbol>", methods=["GET"])
 def stock_detail(symbol):
     """
