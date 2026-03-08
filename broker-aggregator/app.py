@@ -171,7 +171,7 @@ def admin_reload():
     }
 
 
-## search section
+# search section
 @app.route("/search", methods=["GET"])
 def search():
     """
@@ -201,7 +201,7 @@ def search():
         sort=sort_key
     )
 
-## ratings page
+# ratings page
 
 @app.route("/ratings", methods=["GET"])
 def ratings():
