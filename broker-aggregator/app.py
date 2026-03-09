@@ -14,7 +14,7 @@ BROKER_CALLS = []
 # Stores broker summary (name + call count)
 BROKERS = {}
 
-## Stores last refresh timestamp
+# Stores last refresh timestamp
 LAST_REFRESH = None
 
 
