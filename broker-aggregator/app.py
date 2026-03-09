@@ -2,8 +2,6 @@
 from flask import Flask, render_template, request
 from utils.data_loader import load_all_sheets
 from datetime import datetime
-
-## Scheduler import
 from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
