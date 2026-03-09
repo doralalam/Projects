@@ -8,10 +8,10 @@ app = Flask(__name__)
 
 
 
-## Stores all broker calls
+# Stores all broker calls
 BROKER_CALLS = []
 
-## Stores broker summary (name + call count)
+# Stores broker summary (name + call count)
 BROKERS = {}
 
 ## Stores last refresh timestamp
