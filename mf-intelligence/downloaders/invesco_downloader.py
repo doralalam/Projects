@@ -123,7 +123,7 @@ def run_backfill():
         print(f"Fetching API → {year}")
         fund_data_all[year] = fetch_fund_data(year)
 
-    print("\nDownloading rolling 12 months...\n")
+    print("\nDownloading rolling 12 months\n")
 
     for year, funds in fund_data_all.items():
 
