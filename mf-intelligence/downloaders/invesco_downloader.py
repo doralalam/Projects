@@ -51,7 +51,7 @@ def generate_months(n_months=12):
 
     return months
 
-
+# Month Mapping
 month_key_map = {
     "Jan": ("JanUrl", "JanName"),
     "Feb": ("FebUrl", "FebName"),
