@@ -1,0 +1,43 @@
+2026-03-11 14:35:23,227 - INFO - Starting Motilal folder structure setup
+2026-03-11 14:35:23,227 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2026/Feb
+2026-03-11 14:35:23,227 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2026/Jan
+2026-03-11 14:35:23,227 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Dec
+2026-03-11 14:35:23,227 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Nov
+2026-03-11 14:35:23,227 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Oct
+2026-03-11 14:35:23,227 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Sep
+2026-03-11 14:35:23,228 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Aug
+2026-03-11 14:35:23,228 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Jul
+2026-03-11 14:35:23,228 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Jun
+2026-03-11 14:35:23,228 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/May
+2026-03-11 14:35:23,228 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Apr
+2026-03-11 14:35:23,228 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Mar
+2026-03-11 14:35:23,228 - INFO - Motilal folder setup completed
+2026-03-11 14:45:33,327 - INFO - Starting Motilal folder structure setup
+2026-03-11 14:45:33,327 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2026/Feb
+2026-03-11 14:45:33,328 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2026/Jan
+2026-03-11 14:45:33,328 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Dec
+2026-03-11 14:45:33,328 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Nov
+2026-03-11 14:45:33,328 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Oct
+2026-03-11 14:45:33,328 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Sep
+2026-03-11 14:45:33,328 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Aug
+2026-03-11 14:45:33,328 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Jul
+2026-03-11 14:45:33,328 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Jun
+2026-03-11 14:45:33,328 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/May
+2026-03-11 14:45:33,328 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Apr
+2026-03-11 14:45:33,328 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Mar
+2026-03-11 14:45:33,328 - ERROR - File missing for Feb 2026. Please add the file.
+2026-03-11 14:45:33,328 - INFO - Motilal validation completed
+2026-03-11 14:47:52,729 - INFO - Starting Motilal folder structure setup
+2026-03-11 14:47:52,729 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2026/Feb
+2026-03-11 14:47:52,729 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2026/Jan
+2026-03-11 14:47:52,729 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Dec
+2026-03-11 14:47:52,729 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Nov
+2026-03-11 14:47:52,729 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Oct
+2026-03-11 14:47:52,729 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Sep
+2026-03-11 14:47:52,729 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Aug
+2026-03-11 14:47:52,729 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Jul
+2026-03-11 14:47:52,729 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Jun
+2026-03-11 14:47:52,729 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/May
+2026-03-11 14:47:52,729 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Apr
+2026-03-11 14:47:52,729 - INFO - Folder already exists: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/motilal/2025/Mar
+2026-03-11 14:47:52,730 - INFO - Motilal validation completed

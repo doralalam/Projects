@@ -1,0 +1,26 @@
+2026-03-11 15:01:14,815 - INFO - Starting ICICI Prudential folder structure setup
+2026-03-11 15:01:14,815 - INFO - Created folder: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/icici_prudential/2026/Feb
+2026-03-11 15:01:14,815 - INFO - Created folder: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/icici_prudential/2026/Jan
+2026-03-11 15:01:14,815 - INFO - Created folder: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/icici_prudential/2025/Dec
+2026-03-11 15:01:14,815 - INFO - Created folder: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/icici_prudential/2025/Nov
+2026-03-11 15:01:14,815 - INFO - Created folder: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/icici_prudential/2025/Oct
+2026-03-11 15:01:14,816 - INFO - Created folder: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/icici_prudential/2025/Sep
+2026-03-11 15:01:14,816 - INFO - Created folder: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/icici_prudential/2025/Aug
+2026-03-11 15:01:14,816 - INFO - Created folder: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/icici_prudential/2025/Jul
+2026-03-11 15:01:14,816 - INFO - Created folder: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/icici_prudential/2025/Jun
+2026-03-11 15:01:14,816 - INFO - Created folder: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/icici_prudential/2025/May
+2026-03-11 15:01:14,816 - INFO - Created folder: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/icici_prudential/2025/Apr
+2026-03-11 15:01:14,816 - INFO - Created folder: /Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/icici_prudential/2025/Mar
+2026-03-11 15:01:14,816 - ERROR - File missing for Feb 2026. Please add the file.
+2026-03-11 15:01:14,816 - ERROR - File missing for Jan 2026. Please add the file.
+2026-03-11 15:01:14,816 - ERROR - File missing for Dec 2025. Please add the file.
+2026-03-11 15:01:14,816 - ERROR - File missing for Nov 2025. Please add the file.
+2026-03-11 15:01:14,816 - ERROR - File missing for Oct 2025. Please add the file.
+2026-03-11 15:01:14,816 - ERROR - File missing for Sep 2025. Please add the file.
+2026-03-11 15:01:14,816 - ERROR - File missing for Aug 2025. Please add the file.
+2026-03-11 15:01:14,816 - ERROR - File missing for Jul 2025. Please add the file.
+2026-03-11 15:01:14,816 - ERROR - File missing for Jun 2025. Please add the file.
+2026-03-11 15:01:14,816 - ERROR - File missing for May 2025. Please add the file.
+2026-03-11 15:01:14,816 - ERROR - File missing for Apr 2025. Please add the file.
+2026-03-11 15:01:14,817 - ERROR - File missing for Mar 2025. Please add the file.
+2026-03-11 15:01:14,817 - INFO - ICICI Prudential validation completed
