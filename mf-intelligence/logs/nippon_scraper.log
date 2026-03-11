@@ -1,0 +1,39 @@
+2026-03-11 12:59:36,230 - INFO - Downloading Nippon Monthly Portfolios
+2026-03-11 12:59:36,231 - INFO - Already exists: NIMF-MONTHLY-PORTFOLIO-28-Feb-26.xls
+2026-03-11 12:59:36,231 - INFO - Already exists: NIMF-MONTHLY-PORTFOLIO-31-Jan-26.xls
+2026-03-11 12:59:36,231 - INFO - Already exists: NIMF-MONTHLY-PORTFOLIO-31-Dec-25.xls
+2026-03-11 12:59:36,231 - INFO - Trying: NIMF-MONTHLY-PORTFOLIO-30-Nov-25.xls
+2026-03-11 12:59:36,700 - WARNING - Status 404 for https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-Nov-25.xls
+2026-03-11 12:59:39,063 - WARNING - Status 404 for https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-Nov-25.xls
+2026-03-11 12:59:41,432 - WARNING - Status 404 for https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-Nov-25.xls
+2026-03-11 12:59:43,438 - ERROR - Failed after retries: https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-Nov-25.xls
+2026-03-11 12:59:43,945 - INFO - Trying: NIMF-MONTHLY-PORTFOLIO-30-November-25.xls
+2026-03-11 12:59:44,298 - WARNING - Status 404 for https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-November-25.xls
+2026-03-11 12:59:46,701 - WARNING - Status 404 for https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-November-25.xls
+2026-03-11 12:59:49,072 - WARNING - Status 404 for https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-November-25.xls
+2026-03-11 12:59:51,078 - ERROR - Failed after retries: https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-November-25.xls
+2026-03-11 12:59:51,584 - INFO - Already exists: NIMF-MONTHLY-PORTFOLIO-Nov-25.xls
+2026-03-11 12:59:51,585 - INFO - Already exists: NIMF-MONTHLY-PORTFOLIO-31-Oct-25.xls
+2026-03-11 12:59:51,585 - INFO - Already exists: NIMF-MONTHLY-PORTFOLIO-30-Sep-25.xls
+2026-03-11 12:59:51,585 - INFO - Already exists: NIMF-MONTHLY-PORTFOLIO-31-Aug-25.xls
+2026-03-11 12:59:51,585 - INFO - Trying: NIMF-MONTHLY-PORTFOLIO-31-Jul-25.xls
+2026-03-11 12:59:52,074 - WARNING - Status 404 for https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-31-Jul-25.xls
+2026-03-11 12:59:54,518 - WARNING - Status 404 for https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-31-Jul-25.xls
+2026-03-11 12:59:56,912 - WARNING - Status 404 for https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-31-Jul-25.xls
+2026-03-11 12:59:58,919 - ERROR - Failed after retries: https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-31-Jul-25.xls
+2026-03-11 12:59:59,420 - INFO - Already exists: NIMF-MONTHLY-PORTFOLIO-31-July-25.xls
+2026-03-11 12:59:59,421 - INFO - Trying: NIMF-MONTHLY-PORTFOLIO-30-Jun-25.xls
+2026-03-11 12:59:59,909 - WARNING - Status 404 for https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-Jun-25.xls
+2026-03-11 13:00:02,358 - WARNING - Status 404 for https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-Jun-25.xls
+2026-03-11 13:00:04,846 - WARNING - Status 404 for https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-Jun-25.xls
+2026-03-11 13:00:06,849 - ERROR - Failed after retries: https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-Jun-25.xls
+2026-03-11 13:00:07,354 - INFO - Already exists: NIMF-MONTHLY-PORTFOLIO-30-June-25.xls
+2026-03-11 13:00:07,355 - INFO - Already exists: NIMF-MONTHLY-PORTFOLIO-31-May-25.xls
+2026-03-11 13:00:07,356 - INFO - Trying: NIMF-MONTHLY-PORTFOLIO-30-Apr-25.xls
+2026-03-11 13:00:07,931 - WARNING - Status 404 for https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-Apr-25.xls
+2026-03-11 13:00:10,297 - WARNING - Status 404 for https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-Apr-25.xls
+2026-03-11 13:00:12,673 - WARNING - Status 404 for https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-Apr-25.xls
+2026-03-11 13:00:14,680 - ERROR - Failed after retries: https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-30-Apr-25.xls
+2026-03-11 13:00:15,186 - INFO - Already exists: NIMF-MONTHLY-PORTFOLIO-30-April-25.xls
+2026-03-11 13:00:15,186 - INFO - Already exists: NIMF-MONTHLY-PORTFOLIO-31-Mar-25.xls
+2026-03-11 13:00:15,187 - INFO - Nippon Backfill completed
