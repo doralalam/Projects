@@ -1,14 +1,12 @@
 import os
 import pandas as pd
+import logging
 import re
 
-# Paths
-DATA_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/edelweiss"
+RAW_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/edelweiss"
 OUTPUT_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/separated_files/edelweiss"
+LOG_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/logs/separator_logs"
 
-os.makedirs(OUTPUT_PATH, exist_ok=True)
-
-# Fund mapping
 FUND_MAP = {
     "EEECRF": "Edelweiss_Flexi_Cap_Fund",
     "EECONF": "Edelweiss_Consumption_Fund",
@@ -27,33 +25,42 @@ FUND_MAP = {
     "EETECF": "Edelweiss_Technology_Fund"
 }
 
+files_processed = 0
+sheets_extracted = 0
+error_count = 0
+
+
+def setup_logging():
+
+    os.makedirs(LOG_PATH, exist_ok=True)
+
+    log_file = os.path.join(LOG_PATH, "edelweiss_separator.log")
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        handlers=[
+            logging.FileHandler(log_file),
+            logging.StreamHandler()
+        ]
+    )
+
 
 def extract_date_parts(file_name):
-    """
-    Extract Month (3 chars) + Year
-    Example: 31-Jan-2026 → Jan, 2026
-    """
+
     match = re.search(r"\d{2}-([A-Za-z]{3})-(\d{4})", file_name)
 
     if not match:
-        return "UNK", "0000"
+        raise ValueError(f"DATE PARSE FAILED -> {file_name}")
 
     month, year = match.groups()
+
     return month, year
 
 
-# find Header
 def find_header_row(file_path, sheet_name):
-    """
-    Detect header row dynamically
-    by locating 'Name of the Instrument'
-    """
 
-    temp_df = pd.read_excel(
-        file_path,
-        sheet_name=sheet_name,
-        header=None
-    )
+    temp_df = pd.read_excel(file_path, sheet_name=sheet_name, header=None)
 
     for i, row in temp_df.iterrows():
 
@@ -67,13 +74,8 @@ def find_header_row(file_path, sheet_name):
     return None
 
 
-
 def clean_portfolio_dataframe(df):
-    """
-    Cleans category rows & fixes % column
-    """
 
-    # Drop fully empty rows
     df = df.dropna(how="all")
 
     if "Name of the Instrument" not in df.columns:
@@ -81,7 +83,6 @@ def clean_portfolio_dataframe(df):
 
     df = df[df["Name of the Instrument"].notna()]
 
-    # Remove section/category headers
     df = df[
         ~df["Name of the Instrument"]
         .str.contains(
@@ -91,7 +92,6 @@ def clean_portfolio_dataframe(df):
         )
     ]
 
-# Percentage to float value
     if "% to Net Assets" in df.columns:
 
         col = "% to Net Assets"
@@ -105,7 +105,6 @@ def clean_portfolio_dataframe(df):
 
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
-        # Row-level scaling
         df[col] = df[col].apply(
             lambda x: x * 100 if pd.notna(x) and x <= 1 else x
         )
@@ -115,58 +114,109 @@ def clean_portfolio_dataframe(df):
     return df.reset_index(drop=True)
 
 
-## Separate sheets
-for file in os.listdir(DATA_PATH):
+def process_files():
 
-    if not file.endswith(".xlsx"):
-        continue
+    global files_processed, sheets_extracted, error_count
 
-    file_path = os.path.join(DATA_PATH, file)
-    month, year = extract_date_parts(file)
+    for root, _, files in os.walk(RAW_PATH):
 
-    print(f"\nProcessing -> {file} ({month}-{year})")
+        for file in files:
 
-    try:
-        xls = pd.ExcelFile(file_path)
-
-        for sheet in xls.sheet_names:
-
-            if sheet not in FUND_MAP:
+            if not file.endswith(".xlsx"):
                 continue
 
-            fund_name = FUND_MAP[sheet]
+            file_path = os.path.join(root, file)
 
-            # Create fund folder
-            fund_folder = os.path.join(OUTPUT_PATH, fund_name)
-            os.makedirs(fund_folder, exist_ok=True)
-
-            print(f"   -> Extracting {sheet} -> {fund_name}")
-
-            header_row = find_header_row(file_path, sheet)
-
-            if header_row is None:
-                print(f"      Header not found -> {sheet}")
+            try:
+                month, year = extract_date_parts(file)
+            except Exception as e:
+                logging.error(str(e))
+                error_count += 1
                 continue
 
+            logging.info(f"Processing -> {file} ({month}-{year})")
 
-            df = pd.read_excel(
-                file_path,
-                sheet_name=sheet,
-                header=header_row
-            )
+            files_processed += 1
 
-       
-            df = clean_portfolio_dataframe(df)
+            try:
+
+                xls = pd.ExcelFile(file_path)
+
+                for sheet in xls.sheet_names:
+
+                    if sheet not in FUND_MAP:
+                        continue
+
+                    fund_name = FUND_MAP[sheet]
+
+                    logging.info(f"Extracting -> {sheet}")
+
+                    header_row = find_header_row(file_path, sheet)
+
+                    if header_row is None:
+                        logging.warning(f"Header not found -> {sheet}")
+                        continue
+
+                    df = pd.read_excel(
+                        file_path,
+                        sheet_name=sheet,
+                        header=header_row
+                    )
+
+                    df = clean_portfolio_dataframe(df)
+
+                    output_dir = os.path.join(OUTPUT_PATH, year, month)
+
+                    os.makedirs(output_dir, exist_ok=True)
+
+                    output_file = os.path.join(
+                        output_dir,
+                        f"{fund_name}_{month}_{year}.xlsx"
+                    )
+
+                    df.to_excel(output_file, index=False)
+
+                    sheets_extracted += 1
+
+                    logging.info(f"Saved -> {output_file}")
+
+            except Exception as e:
+
+                logging.error(f"Processing failed -> {file}")
+
+                logging.error(str(e))
+
+                error_count += 1
 
 
-            output_file = os.path.join(
-                fund_folder,
-                f"{fund_name}_{month}_{year}.xlsx"
-            )
+def main():
 
-            df.to_excel(output_file, index=False)
+    os.makedirs(OUTPUT_PATH, exist_ok=True)
 
-    except Exception as e:
-        print(f"Failed -> {file} | {e}")
+    setup_logging()
 
-print("\nEdelweiss separation completed.")
+    logging.info("Starting Edelweiss sheet splitting")
+
+    process_files()
+
+    print("\nExecution Summary")
+    print("------------------")
+    print(f"Files processed: {files_processed}")
+    print(f"Sheets extracted: {sheets_extracted}")
+    print(f"Errors: {error_count}")
+
+    if error_count > 0:
+
+        logging.warning("Task partially completed. Please resolve errors.")
+
+        print("\nTask partially completed. Check logs.")
+
+    else:
+
+        logging.info("Task completed successfully.")
+
+        print("\nTask completed successfully.")
+
+
+if __name__ == "__main__":
+    main()
