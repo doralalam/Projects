@@ -5,8 +5,12 @@ import logging
 INPUT_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/separated_files/invesco"
 
 MASTER_BASE = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/master_dataset"
-PARQUET_PATH = os.path.join(MASTER_BASE, "parquet_files", "mf_holdings.parquet")
-XLSX_PATH = os.path.join(MASTER_BASE, "xlsx_files", "mf_holdings.xlsx")
+
+PARQUET_PATH = os.path.join(MASTER_BASE, "parquet_files")
+XLSX_PATH = os.path.join(MASTER_BASE, "xlsx_files")
+
+MASTER_PARQUET = os.path.join(PARQUET_PATH, "mf_holdings.parquet")
+MASTER_XLSX = os.path.join(XLSX_PATH, "mf_holdings.xlsx")
 
 LOG_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/logs/standardizer_logs"
 
@@ -149,6 +153,7 @@ def process_file(file_path):
 
     out.insert(0, "amc", "Invesco")
     out.insert(1, "fund", fund)
+
     out["month"] = month
     out["year"] = year
 
@@ -195,12 +200,12 @@ def update_master_dataset():
 
     new_data = pd.concat(data_collector, ignore_index=True)
 
-    os.makedirs(os.path.dirname(PARQUET_PATH), exist_ok=True)
-    os.makedirs(os.path.dirname(XLSX_PATH), exist_ok=True)
+    os.makedirs(PARQUET_PATH, exist_ok=True)
+    os.makedirs(XLSX_PATH, exist_ok=True)
 
-    if os.path.exists(PARQUET_PATH):
+    if os.path.exists(MASTER_PARQUET):
 
-        existing = pd.read_parquet(PARQUET_PATH)
+        existing = pd.read_parquet(MASTER_PARQUET)
 
         combined = pd.concat([existing, new_data], ignore_index=True)
 
@@ -209,15 +214,16 @@ def update_master_dataset():
         combined = new_data
 
     combined = combined.drop_duplicates(
-        subset=["amc", "fund", "isin", "month", "year"]
+        subset=["amc", "fund", "isin", "month", "year"],
+        keep="last"
     )
 
-    combined.to_parquet(PARQUET_PATH, index=False)
+    combined.to_parquet(MASTER_PARQUET, index=False)
 
-    combined.to_excel(XLSX_PATH, index=False)
+    combined.to_excel(MASTER_XLSX, index=False)
 
-    logging.info(f"Parquet dataset updated -> {PARQUET_PATH}")
-    logging.info(f"Excel dataset updated -> {XLSX_PATH}")
+    logging.info(f"Parquet dataset updated -> {MASTER_PARQUET}")
+    logging.info(f"Excel dataset updated -> {MASTER_XLSX}")
 
 
 def main():
