@@ -31,9 +31,15 @@ FUND_MAP = {
     "MC": "Nippon India MNC Fund"
 }
 
+files_processed = 0
+sheets_extracted = 0
+error_count = 0
+
 
 def setup_logging():
+
     os.makedirs(LOG_PATH, exist_ok=True)
+
     log_file = os.path.join(LOG_PATH, "nippon_separator.log")
 
     logging.basicConfig(
@@ -48,6 +54,8 @@ def setup_logging():
 
 def split_sheets(file_path, year, month):
 
+    global sheets_extracted
+
     xls = pd.ExcelFile(file_path)
 
     for sheet in xls.sheet_names:
@@ -57,11 +65,12 @@ def split_sheets(file_path, year, month):
 
         fund_name = FUND_MAP[sheet]
 
-        logging.info(f"Splitting sheet: {sheet} -> {fund_name}")
+        logging.info(f"Splitting sheet {sheet} -> {fund_name}")
 
         df = pd.read_excel(file_path, sheet_name=sheet, header=None)
 
         output_dir = os.path.join(OUTPUT_PATH, year, month)
+
         os.makedirs(output_dir, exist_ok=True)
 
         output_file = os.path.join(
@@ -71,10 +80,14 @@ def split_sheets(file_path, year, month):
 
         df.to_excel(output_file, index=False, header=False)
 
-        logging.info(f"Saved file: {output_file}")
+        sheets_extracted += 1
+
+        logging.info(f"Saved -> {output_file}")
 
 
 def process_files():
+
+    global files_processed, error_count
 
     for root, _, files in os.walk(RAW_PATH):
 
@@ -87,15 +100,32 @@ def process_files():
 
             parts = root.split(os.sep)
 
-            year = parts[-2]
-            month = parts[-1]
+            try:
+                year = parts[-2]
+                month = parts[-1]
+            except Exception:
 
-            logging.info(f"Processing file: {file} ({month}-{year})")
+                logging.error(f"Folder structure invalid -> {root}")
+
+                error_count += 1
+
+                continue
+
+            logging.info(f"Processing -> {file} ({month}-{year})")
+
+            files_processed += 1
 
             try:
+
                 split_sheets(file_path, year, month)
+
             except Exception as e:
-                logging.error(f"Error processing {file}: {e}")
+
+                logging.error(f"Processing failed -> {file}")
+
+                logging.error(str(e))
+
+                error_count += 1
 
 
 def main():
@@ -104,11 +134,27 @@ def main():
 
     setup_logging()
 
-    logging.info("Starting Nippon sheet splitting...")
+    logging.info("Starting Nippon sheet splitting")
 
     process_files()
 
-    logging.info("Nippon sheet separation completed.")
+    print("\nExecution Summary")
+    print("------------------")
+    print(f"Files processed: {files_processed}")
+    print(f"Sheets extracted: {sheets_extracted}")
+    print(f"Errors: {error_count}")
+
+    if error_count > 0:
+
+        logging.warning("Task partially completed. Please resolve errors.")
+
+        print("\nTask partially completed. Check logs.")
+
+    else:
+
+        logging.info("Task completed successfully.")
+
+        print("\nTask completed successfully.")
 
 
 if __name__ == "__main__":
