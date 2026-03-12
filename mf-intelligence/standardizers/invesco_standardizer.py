@@ -1,0 +1,251 @@
+import os
+import pandas as pd
+import logging
+
+INPUT_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/separated_files/invesco"
+
+MASTER_BASE = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/master_dataset"
+PARQUET_PATH = os.path.join(MASTER_BASE, "parquet_files", "mf_holdings.parquet")
+XLSX_PATH = os.path.join(MASTER_BASE, "xlsx_files", "mf_holdings.xlsx")
+
+LOG_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/logs/standardizer_logs"
+
+files_processed = 0
+rows_written = 0
+errors = 0
+
+data_collector = []
+
+
+def setup_logging():
+
+    os.makedirs(LOG_PATH, exist_ok=True)
+
+    log_file = os.path.join(LOG_PATH, "invesco_standardizer.log")
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        handlers=[
+            logging.FileHandler(log_file),
+            logging.StreamHandler()
+        ]
+    )
+
+
+def detect_header(file_path):
+
+    raw = pd.read_excel(file_path, header=None)
+
+    for i, row in raw.iterrows():
+
+        row_str = row.astype(str).str.lower()
+
+        if row_str.str.contains("isin").any() and row_str.str.contains("name of the instrument").any():
+            return i
+
+    return None
+
+
+def normalize_columns(df):
+
+    col_map = {}
+
+    for c in df.columns:
+
+        cl = str(c).strip().lower()
+
+        if "name of the instrument" in cl:
+            col_map[c] = "stock"
+
+        elif cl == "isin":
+            col_map[c] = "isin"
+
+        elif "industry" in cl or "sector" in cl:
+            col_map[c] = "sector"
+
+        elif "quantity" in cl:
+            col_map[c] = "quantity"
+
+        elif "market/fair value" in cl or "market value" in cl:
+            col_map[c] = "market_value"
+
+        elif "% to net assets" in cl or "% to nav" in cl:
+            col_map[c] = "weight"
+
+    df = df.rename(columns=col_map)
+
+    return df
+
+
+def clean_numeric_columns(df):
+
+    numeric_cols = ["quantity", "market_value", "weight"]
+
+    for col in numeric_cols:
+
+        if col not in df.columns:
+            continue
+
+        df[col] = (
+            df[col]
+            .astype(str)
+            .str.replace(",", "", regex=False)
+            .str.replace("$", "", regex=False)
+            .str.replace("%", "", regex=False)
+            .str.strip()
+        )
+
+        df[col] = pd.to_numeric(df[col], errors="coerce")
+
+    return df
+
+
+def extract_metadata(file_name):
+
+    name = file_name.replace(".xlsx", "")
+
+    parts = name.split("_")
+
+    year = parts[-1]
+    month = parts[-2]
+
+    fund = " ".join(parts[:-3])
+
+    return fund, month, year
+
+
+def process_file(file_path):
+
+    global rows_written
+
+    header_row = detect_header(file_path)
+
+    if header_row is None:
+
+        logging.warning(f"Header not found -> {file_path}")
+        return
+
+    df = pd.read_excel(file_path, header=header_row)
+
+    df = normalize_columns(df)
+
+    df = clean_numeric_columns(df)
+
+    if "isin" not in df.columns:
+
+        logging.warning(f"ISIN column missing -> {file_path}")
+        return
+
+    df = df[df["isin"].astype(str).str.match(r"^INE[A-Z0-9]{9}$", na=False)]
+
+    fund, month, year = extract_metadata(os.path.basename(file_path))
+
+    required_cols = ["stock", "isin", "sector", "quantity", "market_value", "weight"]
+
+    existing_cols = [c for c in required_cols if c in df.columns]
+
+    out = df[existing_cols].copy()
+
+    out.insert(0, "amc", "Invesco")
+    out.insert(1, "fund", fund)
+    out["month"] = month
+    out["year"] = year
+
+    out = out.dropna(subset=["isin"])
+
+    data_collector.append(out)
+
+    rows_written += len(out)
+
+
+def process_all_files():
+
+    global files_processed, errors
+
+    for root, _, files in os.walk(INPUT_PATH):
+
+        for file in files:
+
+            if not file.endswith(".xlsx"):
+                continue
+
+            file_path = os.path.join(root, file)
+
+            try:
+
+                logging.info(f"Processing -> {file}")
+
+                process_file(file_path)
+
+                files_processed += 1
+
+            except Exception as e:
+
+                logging.error(f"Failed -> {file}")
+                logging.error(str(e))
+
+                errors += 1
+
+
+def update_master_dataset():
+
+    if not data_collector:
+        return
+
+    new_data = pd.concat(data_collector, ignore_index=True)
+
+    os.makedirs(os.path.dirname(PARQUET_PATH), exist_ok=True)
+    os.makedirs(os.path.dirname(XLSX_PATH), exist_ok=True)
+
+    if os.path.exists(PARQUET_PATH):
+
+        existing = pd.read_parquet(PARQUET_PATH)
+
+        combined = pd.concat([existing, new_data], ignore_index=True)
+
+    else:
+
+        combined = new_data
+
+    combined = combined.drop_duplicates(
+        subset=["amc", "fund", "isin", "month", "year"]
+    )
+
+    combined.to_parquet(PARQUET_PATH, index=False)
+
+    combined.to_excel(XLSX_PATH, index=False)
+
+    logging.info(f"Parquet dataset updated -> {PARQUET_PATH}")
+    logging.info(f"Excel dataset updated -> {XLSX_PATH}")
+
+
+def main():
+
+    setup_logging()
+
+    logging.info("Starting Invesco standardization")
+
+    process_all_files()
+
+    update_master_dataset()
+
+    print("\nExecution Summary")
+    print("------------------")
+    print(f"Files processed: {files_processed}")
+    print(f"Rows added: {rows_written}")
+    print(f"Errors: {errors}")
+
+    if errors > 0:
+
+        logging.warning("Task partially completed. Resolve errors.")
+        print("\nTask partially completed. Check logs.")
+
+    else:
+
+        logging.info("Task completed successfully.")
+        print("\nTask completed successfully.")
+
+
+if __name__ == "__main__":
+    main()
