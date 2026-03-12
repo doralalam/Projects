@@ -1,14 +1,10 @@
 import os
 import pandas as pd
-import re
+import logging
 
-
-# Paths
-DATA_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/nippon"
+RAW_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/nippon_scraped"
 OUTPUT_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/separated_files/nippon"
-
-os.makedirs(OUTPUT_PATH, exist_ok=True)
-
+LOG_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/logs/separator_logs"
 
 FUND_MAP = {
     "GF": "Nippon India Growth Mid Cap Fund",
@@ -36,182 +32,84 @@ FUND_MAP = {
 }
 
 
-# ---------------------------------------------------
-# DATE EXTRACTION (Robust)
-# ---------------------------------------------------
-def extract_date_parts(file_name):
+def setup_logging():
+    os.makedirs(LOG_PATH, exist_ok=True)
+    log_file = os.path.join(LOG_PATH, "nippon_separator.log")
 
-    match = re.search(
-        r'(Jan|Feb|Mar|Apr|April|May|Jun|June|Jul|July|Aug|Sep|Oct|Nov|November|Dec)[-\s](\d{2})',
-        file_name,
-        re.IGNORECASE
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        handlers=[
+            logging.FileHandler(log_file),
+            logging.StreamHandler()
+        ]
     )
 
-    if not match:
-        return "UNK", "0000"
 
-    month_raw = match.group(1)
-    year_short = match.group(2)
+def split_sheets(file_path, year, month):
 
-    month_map = {
-        "Jan": "Jan", "Feb": "Feb", "Mar": "Mar",
-        "Apr": "Apr", "April": "Apr",
-        "May": "May",
-        "Jun": "Jun", "June": "Jun",
-        "Jul": "Jul", "July": "Jul",
-        "Aug": "Aug", "Sep": "Sep",
-        "Oct": "Oct",
-        "Nov": "Nov", "November": "Nov",
-        "Dec": "Dec",
-    }
+    xls = pd.ExcelFile(file_path)
 
-    month = month_map.get(month_raw, "UNK")
-    year = "20" + year_short
+    for sheet in xls.sheet_names:
 
-    return month, year
+        if sheet not in FUND_MAP:
+            continue
 
+        fund_name = FUND_MAP[sheet]
 
-# ---------------------------------------------------
-# Robust Excel Loader
-# ---------------------------------------------------
-def load_excel_file(file_path):
-    try:
-        return pd.ExcelFile(file_path)
-    except Exception:
-        return pd.ExcelFile(file_path, engine="openpyxl")
+        logging.info(f"Splitting sheet: {sheet} -> {fund_name}")
 
+        df = pd.read_excel(file_path, sheet_name=sheet, header=None)
 
-def read_excel_safe(file_path, sheet_name, header_row):
-    try:
-        return pd.read_excel(file_path, sheet_name=sheet_name, header=header_row)
-    except Exception:
-        return pd.read_excel(file_path, sheet_name=sheet_name, header=header_row, engine="openpyxl")
+        output_dir = os.path.join(OUTPUT_PATH, year, month)
+        os.makedirs(output_dir, exist_ok=True)
 
-
-# ---------------------------------------------------
-# HEADER DETECTION (Improved)
-# ---------------------------------------------------
-def find_header_row(file_path, sheet_name):
-
-    try:
-        temp_df = pd.read_excel(file_path, sheet_name=sheet_name, header=None)
-    except Exception:
-        temp_df = pd.read_excel(file_path, sheet_name=sheet_name, header=None, engine="openpyxl")
-
-    for i, row in temp_df.iterrows():
-        row_str = row.astype(str).str.lower()
-
-        if (
-            any("isin" in val for val in row_str) and
-            any("name of the instrument" in val for val in row_str)
-        ):
-            return i
-
-    return None
-
-
-# ---------------------------------------------------
-# CLEAN PORTFOLIO DATA
-# ---------------------------------------------------
-def clean_portfolio_dataframe(df):
-
-    df = df.dropna(how="all")
-    df.columns = df.columns.str.strip()
-
-    # Normalize column names
-    rename_map = {}
-
-    for col in df.columns:
-        col_lower = col.lower()
-
-        if "name of the instrument" in col_lower:
-            rename_map[col] = "Name of the Instrument"
-
-        elif col_lower.strip() == "isin":
-            rename_map[col] = "ISIN"
-
-        elif "% to nav" in col_lower:
-            rename_map[col] = "% to NAV"
-
-        elif "industry" in col_lower:
-            rename_map[col] = "Industry"
-
-    df = df.rename(columns=rename_map)
-
-    if "Name of the Instrument" not in df.columns:
-        return df
-
-    # Remove blank rows
-    df = df[df["Name of the Instrument"].notna()]
-
-    # Keep only valid ISIN rows (equity filter)
-    if "ISIN" in df.columns:
-        df = df[
-            df["ISIN"]
-            .astype(str)
-            .str.match(r'^INE[A-Z0-9]{9}$', na=False)
-        ]
-
-    # Remove category rows
-    df = df[
-        ~df["Name of the Instrument"]
-        .str.contains(
-            "Equity|Debt|Mutual Fund|TREPS|Cash|Derivatives|Total",
-            case=False,
-            na=False
+        output_file = os.path.join(
+            output_dir,
+            f"{fund_name}_{month}_{year}.xlsx"
         )
-    ]
 
-    return df.reset_index(drop=True)
+        df.to_excel(output_file, index=False, header=False)
+
+        logging.info(f"Saved file: {output_file}")
 
 
-# ---------------------------------------------------
-# MAIN LOOP
-# ---------------------------------------------------
-for file in os.listdir(DATA_PATH):
+def process_files():
 
-    if not (file.endswith(".xls") or file.endswith(".xlsx")):
-        continue
+    for root, _, files in os.walk(RAW_PATH):
 
-    file_path = os.path.join(DATA_PATH, file)
-    month, year = extract_date_parts(file)
+        for file in files:
 
-    print(f"\nProcessing -> {file} ({month}-{year})")
-
-    try:
-
-        xls = load_excel_file(file_path)
-
-        for sheet in xls.sheet_names:
-
-            if sheet not in FUND_MAP:
+            if not file.endswith((".xls", ".xlsx")):
                 continue
 
-            fund_name = FUND_MAP[sheet]
+            file_path = os.path.join(root, file)
 
-            fund_folder = os.path.join(OUTPUT_PATH, fund_name)
-            os.makedirs(fund_folder, exist_ok=True)
+            parts = root.split(os.sep)
 
-            print(f"   -> Extracting {sheet} -> {fund_name}")
+            year = parts[-2]
+            month = parts[-1]
 
-            header_row = find_header_row(file_path, sheet)
+            logging.info(f"Processing file: {file} ({month}-{year})")
 
-            if header_row is None:
-                print(f"      Header not found -> {sheet}")
-                continue
+            try:
+                split_sheets(file_path, year, month)
+            except Exception as e:
+                logging.error(f"Error processing {file}: {e}")
 
-            df = read_excel_safe(file_path, sheet, header_row)
 
-            df = clean_portfolio_dataframe(df)
+def main():
 
-            output_file = os.path.join(
-                fund_folder,
-                f"{fund_name}_{month}_{year}.xlsx"
-            )
+    os.makedirs(OUTPUT_PATH, exist_ok=True)
 
-            df.to_excel(output_file, index=False)
+    setup_logging()
 
-    except Exception as e:
-        print(f"Failed -> {file} | {e}")
+    logging.info("Starting Nippon sheet splitting...")
 
-print("\nNippon separation completed successfully.")
+    process_files()
+
+    logging.info("Nippon sheet separation completed.")
+
+
+if __name__ == "__main__":
+    main()
