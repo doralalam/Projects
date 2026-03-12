@@ -1,13 +1,13 @@
 import os
 import pandas as pd
+import logging
 import re
 
-# Paths
-DATA_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/sbi"
+RAW_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/raw_files/sbi_scraped"
 OUTPUT_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/data/separated_files/sbi"
+LOG_PATH = "/Users/dorababulalam/GitHub/Projects/mf-intelligence/logs/separator_logs"
 
 os.makedirs(OUTPUT_PATH, exist_ok=True)
-
 
 FUND_MAP = {
     "SLMF": "SBI Large and Midcap Fund",
@@ -51,31 +51,52 @@ FUND_MAP = {
     "SBIRIOS": "SBI Resurgent India Opportunities Scheme"
 }
 
+files_processed = 0
+sheets_extracted = 0
+error_count = 0
+
+
+def setup_logging():
+
+    os.makedirs(LOG_PATH, exist_ok=True)
+
+    log_file = os.path.join(LOG_PATH, "sbi_separator.log")
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        handlers=[
+            logging.FileHandler(log_file),
+            logging.StreamHandler()
+        ]
+    )
 
 
 def extract_date_parts(file_name):
 
     match = re.search(
-        r'(january|february|march|apil|april|may|june|july|august|september|october|november|december)-(\d{4})',
+        r'(january|february|march|april|may|june|july|august|september|october|november|december)[-_ ]*(\d{2,4})',
         file_name,
         re.IGNORECASE
     )
 
     if not match:
-        return "UNK", "0000"
+        raise ValueError(f"DATE PARSE FAILED -> {file_name}")
 
     month_full = match.group(1).lower()
     year = match.group(2)
 
+    if len(year) == 2:
+        year = "20" + year
+
     month_map = {
-        "january": "Jan", "february": "Feb", "march": "Mar",
-        "april": "Apr", "may": "May", "june": "Jun",
-        "july": "Jul", "august": "Aug", "september": "Sep",
-        "october": "Oct", "november": "Nov", "december": "Dec"
+        "january": "Jan","february": "Feb","march": "Mar",
+        "april": "Apr","may": "May","june": "Jun",
+        "july": "Jul","august": "Aug","september": "Sep",
+        "october": "Oct","november": "Nov","december": "Dec"
     }
 
-    return month_map.get(month_full, "UNK"), year
-
+    return month_map[month_full], year
 
 
 def find_header_row(file_path, sheet_name):
@@ -83,6 +104,7 @@ def find_header_row(file_path, sheet_name):
     temp_df = pd.read_excel(file_path, sheet_name=sheet_name, header=None)
 
     for i, row in temp_df.iterrows():
+
         row_str = row.astype(str).str.lower()
 
         if row_str.str.contains("name of the instrument").any():
@@ -95,23 +117,17 @@ def clean_portfolio_dataframe(df):
 
     df = df.copy()
 
-    # Strip column names
     df.columns = df.columns.str.strip()
 
-    # Drop fully empty rows
     df.dropna(how="all", inplace=True)
 
-    # Must contain ISIN column
     if "ISIN" not in df.columns:
         return pd.DataFrame()
 
-    # Remove rows without ISIN
     df = df[df["ISIN"].notna()]
 
-    # Strict ISIN validation (12-character alphanumeric)
     df = df[df["ISIN"].astype(str).str.match(r"^[A-Z0-9]{12}$", na=False)]
 
-    # Remove section headers
     if "Name of the Instrument / Issuer" in df.columns:
         df = df[
             ~df["Name of the Instrument / Issuer"]
@@ -123,10 +139,8 @@ def clean_portfolio_dataframe(df):
             )
         ]
 
-    # Reset index
     df.reset_index(drop=True, inplace=True)
 
-    # Keep only important columns
     required_cols = [
         "Name of the Instrument / Issuer",
         "ISIN",
@@ -140,57 +154,112 @@ def clean_portfolio_dataframe(df):
 
     return df
 
-for file in os.listdir(DATA_PATH):
 
-    if not file.endswith(".xlsx"):
-        continue
+def process_files():
 
-    file_path = os.path.join(DATA_PATH, file)
-    month, year = extract_date_parts(file)
+    global files_processed, sheets_extracted, error_count
 
-    print(f"\nProcessing -> {file} ({month}-{year})")
+    for root, _, files in os.walk(RAW_PATH):
 
-    try:
-        xls = pd.ExcelFile(file_path)
+        for file in files:
 
-        for sheet in xls.sheet_names:
-
-            if sheet not in FUND_MAP:
+            if not file.endswith(".xlsx"):
                 continue
 
-            fund_name = FUND_MAP[sheet]
+            file_path = os.path.join(root, file)
 
-            fund_folder = os.path.join(OUTPUT_PATH, fund_name)
-            os.makedirs(fund_folder, exist_ok=True)
-
-            print(f"   -> Extracting {sheet}")
-
-            header_row = find_header_row(file_path, sheet)
-
-            if header_row is None:
-                print(f"      Header not found -> {sheet}")
+            try:
+                month, year = extract_date_parts(file)
+            except Exception as e:
+                logging.error(str(e))
+                error_count += 1
                 continue
 
-            df = pd.read_excel(
-                file_path,
-                sheet_name=sheet,
-                header=header_row
-            )
+            logging.info(f"Processing -> {file} ({month}-{year})")
 
-            df = clean_portfolio_dataframe(df)
+            files_processed += 1
 
-            if df.empty:
-                print(f"      No valid data found -> {sheet}")
-                continue
+            try:
 
-            output_file = os.path.join(
-                fund_folder,
-                f"{fund_name}_{month}_{year}.xlsx"
-            )
+                xls = pd.ExcelFile(file_path)
 
-            df.to_excel(output_file, index=False)
+                for sheet in xls.sheet_names:
 
-    except Exception as e:
-        print(f"Failed -> {file} | {e}")
+                    if sheet not in FUND_MAP:
+                        continue
 
-print("\nSBI separation completed successfully.")
+                    fund_name = FUND_MAP[sheet]
+
+                    logging.info(f"Extracting -> {sheet}")
+
+                    header_row = find_header_row(file_path, sheet)
+
+                    if header_row is None:
+                        logging.warning(f"Header not found -> {sheet}")
+                        continue
+
+                    df = pd.read_excel(
+                        file_path,
+                        sheet_name=sheet,
+                        header=header_row
+                    )
+
+                    df = clean_portfolio_dataframe(df)
+
+                    if df.empty:
+                        logging.warning(f"No valid data -> {sheet}")
+                        continue
+
+                    output_dir = os.path.join(OUTPUT_PATH, year, month)
+
+                    os.makedirs(output_dir, exist_ok=True)
+
+                    output_file = os.path.join(
+                        output_dir,
+                        f"{fund_name}_{month}_{year}.xlsx"
+                    )
+
+                    df.to_excel(output_file, index=False)
+
+                    sheets_extracted += 1
+
+                    logging.info(f"Saved -> {output_file}")
+
+            except Exception as e:
+
+                logging.error(f"Processing failed -> {file}")
+
+                logging.error(str(e))
+
+                error_count += 1
+
+
+def main():
+
+    setup_logging()
+
+    logging.info("Starting SBI sheet splitting")
+
+    process_files()
+
+    print("\nExecution Summary")
+    print("------------------")
+    print(f"Files processed: {files_processed}")
+    print(f"Sheets extracted: {sheets_extracted}")
+    print(f"Errors: {error_count}")
+
+    if error_count > 0:
+
+        logging.warning("Task partially completed. Please resolve errors.")
+
+        print("\nTask partially completed. Check logs.")
+
+    else:
+
+        logging.info("Task completed successfully.")
+
+        print("\nTask completed successfully.")
+
+
+if __name__ == "__main__":
+    main()
