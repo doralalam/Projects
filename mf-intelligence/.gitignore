@@ -1,4 +1,4 @@
-# Ignore data and logs folder
+# Ignore data and logs folders
 data/
 logs/
 
