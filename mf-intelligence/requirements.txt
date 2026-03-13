@@ -1,8 +1,11 @@
 requests
 pandas
-beautifulsoup4
-pdfplumber
-openpyxl
-selenium
-webdriver_manager
-xlrd
+os
+logging
+datetime
+time
+calendar
+re
+shutil
+pathlib
+sqlalchemy

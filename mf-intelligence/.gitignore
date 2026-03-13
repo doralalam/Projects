@@ -1,0 +1,36 @@
+# ======================
+# Python
+# ======================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.egg-info/
+*.egg
+*.env
+*.venv
+
+# ======================
+# Jupyter / Notebooks
+# ======================
+.ipynb_checkpoints/
+test.ipynb
+
+# ======================
+# Data & Logs
+# ======================
+data/
+logs/
+
+# ======================
+# OS generated files
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# Optional: IDE / editor settings
+# ======================
+.vscode/
+.idea/
