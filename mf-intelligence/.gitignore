@@ -8,6 +8,6 @@ logs/
 # macOS system files
 .DS_Store
 
-# Python cache
+# Python 
 __pycache__/
 *.pyc
