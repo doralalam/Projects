@@ -5,7 +5,7 @@ logs/
 # Ignore Jupyter notebooks
 *.ipynb
 
-# macOS system files
+# macOS system file
 .DS_Store
 
 # Python cache
