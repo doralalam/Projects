@@ -1,4 +1,5 @@
 import os
+import re
 import pandas as pd
 import logging
 from pathlib import Path
@@ -49,6 +50,29 @@ def detect_header(file_path):
     return 0
 
 
+def clean_fund_name(fund_name):
+
+    fund_name = fund_name.replace("_", " ")
+    fund_name = fund_name.strip()
+
+    fund_name = " ".join(fund_name.split())
+
+    fund_name = fund_name.title()
+
+    abbreviations = ["ELSS", "ESG", "PSU", "BFSI", "MNC", "ETF"]
+
+    for abbr in abbreviations:
+        fund_name = re.sub(rf"\b{abbr}\b", abbr, fund_name, flags=re.IGNORECASE)
+
+    if not fund_name.startswith("Edelweiss"):
+        fund_name = "Edelweiss " + fund_name
+
+    if not fund_name.endswith("Fund"):
+        fund_name = fund_name + " Fund"
+
+    return fund_name
+
+
 def process_file(file_path):
 
     global rows_added
@@ -71,6 +95,7 @@ def process_file(file_path):
     required = [stock_col, isin_col, sector_col]
 
     for col in required:
+
         if col not in df.columns:
             logging.warning(f"Missing column {col} -> {file_path}")
             return
@@ -78,16 +103,12 @@ def process_file(file_path):
     df[isin_col] = df[isin_col].astype(str).str.strip()
     df[sector_col] = df[sector_col].astype(str).str.strip()
 
-    # Rule 1: ISIN starts with INE
     mask_isin = df[isin_col].str.startswith("INE", na=False)
 
-    # Rule 2: YIELD blank
     mask_yield_blank = df[yield_col].isna() | (df[yield_col].astype(str).str.strip() == "")
 
-    # Rule 3: sector not nan
     mask_sector_not_nan = df[sector_col].notna() & (df[sector_col].str.lower() != "nan")
 
-    # Rule 4: sector should not start with FITCH or CRISIL
     mask_sector_rating = ~df[sector_col].str.startswith(("FITCH", "CRISIL"), na=False)
 
     df = df[mask_isin & mask_yield_blank & mask_sector_not_nan & mask_sector_rating]
@@ -100,7 +121,9 @@ def process_file(file_path):
     df[weight_col] = pd.to_numeric(df[weight_col], errors="coerce")
 
     fund_full = file_path.stem
-    fund = fund_full.rsplit("_", 2)[0]
+    fund_raw = fund_full.rsplit("_", 2)[0]
+
+    fund = clean_fund_name(fund_raw)
 
     year = file_path.parents[1].name
     month = file_path.parents[0].name[:3]
@@ -174,29 +197,21 @@ def update_master_dataset():
         logging.info("No data collected. Master dataset not updated.")
         return
 
-    new_data = pd.concat(data_collector, ignore_index=True)
+    combined = pd.concat(data_collector, ignore_index=True)
+
+    combined = combined.drop_duplicates(
+        subset=["amc", "fund", "isin", "month", "year"],
+        keep="last"
+    )
 
     PARQUET_PATH.mkdir(parents=True, exist_ok=True)
     XLSX_PATH.mkdir(parents=True, exist_ok=True)
 
-    if MASTER_PARQUET.exists():
-
-        existing = pd.read_parquet(MASTER_PARQUET)
-
-        combined = pd.concat([existing, new_data], ignore_index=True)
-
-    else:
-
-        combined = new_data
-
-    combined = combined.drop_duplicates(
-        subset=["amc", "fund", "isin", "month", "year"]
-    )
-
     combined.to_parquet(MASTER_PARQUET, index=False)
     combined.to_excel(MASTER_XLSX, index=False)
 
-    logging.info("Master dataset updated")
+    logging.info("Parquet dataset overwritten")
+    logging.info("Excel dataset overwritten")
 
 
 def main():

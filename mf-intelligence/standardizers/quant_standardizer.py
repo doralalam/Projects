@@ -26,6 +26,7 @@ data_collector = []
 
 def setup_logging():
     LOG_PATH.mkdir(parents=True, exist_ok=True)
+
     log_file = LOG_PATH / "quant_standardizer.log"
 
     logging.basicConfig(
@@ -80,17 +81,32 @@ def clean_numeric_columns(df):
             .str.strip()
         )
         df[col] = pd.to_numeric(df[col], errors="coerce")
+        df[col] = df[col].round(2)  # <-- round to 2 decimals
     return df
+
+
+def clean_fund_name(fund_name):
+    fund_name = fund_name.replace("_", " ").strip()
+    fund_name = " ".join(fund_name.split()).title()
+    abbreviations = ["ELSS", "ESG", "PSU", "BFSI", "TECK", "MNC", "ETF"]
+    for abbr in abbreviations:
+        fund_name = re.sub(rf"\b{abbr}\b", abbr, fund_name, flags=re.IGNORECASE)
+    if not fund_name.startswith("Quant"):
+        fund_name = "Quant " + fund_name
+    if not fund_name.endswith("Fund"):
+        fund_name = fund_name + " Fund"
+    return fund_name
 
 
 def extract_metadata_from_filename(file_name):
     name = file_name.replace(".xlsx", "")
     parts = name.split("_")
     if len(parts) < 3:
-        return "Unknown Fund", "UNK", "0000"
+        return "Quant Unknown Fund", "UNK", "0000"
     year = parts[-1]
     month = parts[-2]
-    fund = " ".join(parts[:-3])
+    fund_raw = " ".join(parts[:-3])
+    fund = clean_fund_name(fund_raw)
     return fund, month, year
 
 
@@ -100,34 +116,27 @@ def process_file(file_path):
     if header_row is None:
         logging.warning(f"Header not found -> {file_path}")
         return
-
     df = pd.read_excel(file_path, header=header_row)
     df = normalize_columns(df)
     df = clean_numeric_columns(df)
     if "isin" not in df.columns:
         logging.warning(f"ISIN column missing -> {file_path}")
         return
-
     df = df[df["isin"].astype(str).str.match(r"^INE[A-Z0-9]{9}$", na=False)]
-
     df["sector"] = df["sector"].astype(str).str.strip()
     invalid_sectors = ["", "NA", "N.A.", "N A", "None", "nan"]
     df = df[~df["sector"].isin(invalid_sectors)]
-
     fund, month, year = extract_metadata_from_filename(os.path.basename(file_path))
-
     required_cols = ["stock", "isin", "sector", "quantity", "market_value", "weight"]
     for col in required_cols:
         if col not in df.columns:
             df[col] = None
-
     out = df[required_cols].copy()
     out.insert(0, "amc", "Quant")
     out.insert(1, "fund", fund)
     out["month"] = month
     out["year"] = year
     out = out.dropna(subset=["isin"])
-
     data_collector.append(out)
     rows_written += len(out)
 
@@ -151,29 +160,19 @@ def process_all_files():
 
 def update_master_dataset():
     if not data_collector:
+        logging.info("No data collected. Master dataset not updated.")
         return
-
-    new_data = pd.concat(data_collector, ignore_index=True)
-
-    PARQUET_PATH.mkdir(parents=True, exist_ok=True)
-    XLSX_PATH.mkdir(parents=True, exist_ok=True)
-
-    if MASTER_PARQUET.exists():
-        existing = pd.read_parquet(MASTER_PARQUET)
-        combined = pd.concat([existing, new_data], ignore_index=True)
-    else:
-        combined = new_data
-
+    combined = pd.concat(data_collector, ignore_index=True)
     combined = combined.drop_duplicates(
         subset=["amc", "fund", "isin", "month", "year"],
         keep="last",
     )
-
+    PARQUET_PATH.mkdir(parents=True, exist_ok=True)
+    XLSX_PATH.mkdir(parents=True, exist_ok=True)
     combined.to_parquet(MASTER_PARQUET, index=False)
     combined.to_excel(MASTER_XLSX, index=False)
-
-    logging.info(f"Parquet dataset updated -> {MASTER_PARQUET}")
-    logging.info(f"Excel dataset updated -> {MASTER_XLSX}")
+    logging.info(f"Parquet dataset overwritten -> {MASTER_PARQUET}")
+    logging.info(f"Excel dataset overwritten -> {MASTER_XLSX}")
 
 
 def main():
