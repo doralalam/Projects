@@ -88,7 +88,7 @@ def clean_numeric_columns(df):
 def clean_fund_name(fund_name):
     fund_name = fund_name.replace("_", " ").strip()
     fund_name = " ".join(fund_name.split()).title()
-    abbreviations = ["ELSS", "ESG", "PSU", "BFSI", "TECK", "MNC", "ETF"]
+    abbreviations = ["ELSS", "ESG", "PSU", "BFSI", "TECK", "MNC", "ETF", "BSE"]
     for abbr in abbreviations:
         fund_name = re.sub(rf"\b{abbr}\b", abbr, fund_name, flags=re.IGNORECASE)
     if not fund_name.startswith("Quant"):
