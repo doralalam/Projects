@@ -113,7 +113,7 @@ def clean_fund_name(fund_name):
 
     fund_name = fund_name.title()
 
-    abbreviations = ["ELSS", "ESG", "PSU", "BFSI", "MNC", "ETF", "BSE"]
+    abbreviations = ["ELSS", "ESG", "PSU", "BFSI", "MNC", "ETF", "BSE", "IT"]
 
     for abbr in abbreviations:
         fund_name = re.sub(rf"\b{abbr}\b", abbr, fund_name, flags=re.IGNORECASE)
