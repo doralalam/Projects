@@ -1,6 +1,7 @@
 # Ignore data and logs folders
 data/
 logs/
+.env
 
 # Ignore Jupyter notebooks
 *.ipynb

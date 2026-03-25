@@ -2,6 +2,17 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import psycopg2
 import pandas as pd
+import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
+DB_NAME = os.getenv("DB_NAME")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
 
 app = FastAPI()
 
@@ -13,12 +24,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 conn = psycopg2.connect(
-    host="localhost",
-    port="5433",
-    database="mf_intelligence",
-    user="postgres",
-    password="1234"
+    host=DB_HOST,
+    port=DB_PORT,
+    database=DB_NAME,
+    user=DB_USER,
+    password=DB_PASSWORD
 )
 
 @app.get("/fund/{fund_name}/mom-pivot")
@@ -44,11 +56,7 @@ def get_mom_pivot(fund_name: str):
         df["mom_change"] = pd.to_numeric(df["mom_change_pct"], errors="coerce")
 
         latest_date = df["report_date"].max()
-
-        df = df[
-            df["report_date"] >= latest_date - pd.DateOffset(months=11)
-        ]
-
+        df = df[df["report_date"] >= latest_date - pd.DateOffset(months=11)]
         df = df.sort_values(by="report_date", ascending=False)
 
         months = sorted(df["report_date"].dt.to_period("M").unique(), reverse=True)
@@ -69,12 +77,10 @@ def get_mom_pivot(fund_name: str):
 
         for (stock, sector), values in pivot_data.items():
             row = {"stock": stock, "sector": sector}
-
             for m in months:
                 label = m.to_timestamp().strftime("%b %Y")
                 row[f"{label}_weight"] = values.get(f"{label}_weight", None)
                 row[f"{label}_mom"] = values.get(f"{label}_mom", None)
-
             result.append(row)
 
         return result
