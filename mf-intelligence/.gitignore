@@ -11,3 +11,10 @@ logs/
 # Python cache
 __pycache__/
 *.pyc
+
+# Python cache
+api/__pycache__/
+
+# Node modules
+frontend/node_modules/
+frontend/build/

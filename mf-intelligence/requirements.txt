@@ -9,3 +9,6 @@ re
 shutil
 pathlib
 sqlalchemy
+fastapi
+uvicorn
+psycopg2
