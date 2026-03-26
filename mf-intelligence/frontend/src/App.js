@@ -74,6 +74,8 @@ function App() {
     return () => container?.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const stickyShadow = scrollLeft > 0 ? "2px 0 6px rgba(0,0,0,0.1)" : "none";
+
   const monthColumns = columns.filter(col => col.includes("_weight"));
   const prevCol = monthColumns[1];
 
@@ -112,30 +114,17 @@ function App() {
 
       <div style={{ marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
-          <select
-            value={amc}
-            onChange={e => setAmc(e.target.value)}
-            style={{ fontSize: 16, padding: "6px 10px", marginRight: 10 }}
-          >
+          <select value={amc} onChange={e => setAmc(e.target.value)} style={{ fontSize: 16, padding: "6px 10px", marginRight: 10 }}>
             {amcOptions.map((a, i) => <option key={i} value={a}>{a}</option>)}
           </select>
-          <select
-            value={fund}
-            onChange={e => setFund(e.target.value)}
-            style={{ fontSize: 16, padding: "6px 10px" }}
-          >
+          <select value={fund} onChange={e => setFund(e.target.value)} style={{ fontSize: 16, padding: "6px 10px" }}>
             {fundsForSelectedAmc.map((f, i) => <option key={i} value={f}>{f}</option>)}
           </select>
         </div>
 
         <div>
           <label>
-            <input
-              type="checkbox"
-              checked={showMoM}
-              onChange={(e) => setShowMoM(e.target.checked)}
-              style={{ marginRight: 6 }}
-            />
+            <input type="checkbox" checked={showMoM} onChange={(e) => setShowMoM(e.target.checked)} style={{ marginRight: 6 }} />
             Show MoM %
           </label>
         </div>
@@ -145,12 +134,13 @@ function App() {
         <table style={{ borderCollapse: "collapse", tableLayout: "auto", minWidth: "100%", fontSize: "13px" }}>
           <thead style={{ backgroundColor: "#f2f2f2", position: "sticky", top: 0, zIndex: 3, fontWeight: 700 }}>
             <tr>
-              <th style={{ position: "sticky", left: 0, zIndex: 5, backgroundColor: "#f2f2f2", padding: "6px 12px", borderRight: "2px solid #ccc", minWidth: 150, cursor: "pointer" }} onClick={() => handleSort("stock")}>
+              <th style={{ position: "sticky", left: 0, zIndex: 5, backgroundColor: "#f2f2f2", padding: "6px 12px", borderRight: "2px solid #ccc", minWidth: 150, cursor: "pointer", boxShadow: stickyShadow }} onClick={() => handleSort("stock")}>
                 Stock {sortConfig.column === "stock" ? (sortConfig.direction === "asc" ? " ↑" : " ↓") : ""}
               </th>
-              <th style={{ position: "sticky", left: 0, zIndex: 4, backgroundColor: "#f2f2f2", padding: "6px 8px", borderRight: "2px solid #ccc", width: 60, cursor: "pointer", transform: `translateX(${scrollLeft > 0 ? -Math.min(scrollLeft, 60) : 0}px)`, transition: "transform 0.2s" }} onClick={() => handleSort("sector")}>
+              <th style={{ position: "sticky", left: 0, zIndex: 4, backgroundColor: "#f2f2f2", padding: "6px 8px", borderRight: "2px solid #ccc", width: 60, cursor: "pointer", transform: `translateX(${scrollLeft > 0 ? -Math.min(scrollLeft, 60) : 0}px)`, transition: "transform 0.2s", boxShadow: stickyShadow, willChange: "transform" }} onClick={() => handleSort("sector")}>
                 Sector {sortConfig.column === "sector" ? (sortConfig.direction === "asc" ? " ↑" : " ↓") : ""}
               </th>
+
               {monthColumns.map((col, idx) => {
                 const baseName = col.replace("_weight", "");
                 const isSortedMoM = sortConfig.column === col && sortConfig.type === "mom";
@@ -187,13 +177,13 @@ function App() {
 
               return (
                 <tr key={i} style={{ borderBottom: "1px solid #e0e0e0" }}>
-                  <td style={{ position: "sticky", left: 0, backgroundColor: "#fff", padding: "4px 12px", whiteSpace: "nowrap", fontWeight: 700, borderRight: "2px solid #ccc", zIndex: 5 }}>
+                  <td style={{ position: "sticky", left: 0, backgroundColor: "#fff", padding: "4px 12px", whiteSpace: "nowrap", fontWeight: 700, borderRight: "2px solid #ccc", zIndex: 5, boxShadow: stickyShadow }}>
                     {row.stock}
                     {(isTopPositive || isTopNegative) && <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 600, color: isTopPositive ? "green" : "red", backgroundColor: isTopPositive ? "#e6f9e6" : "#ffe6e6", padding: "2px 4px", borderRadius: 4 }}>{isTopPositive ? "Increased" : "Decreased"}</span>}
                     {freshExit && <span style={{ marginLeft: 4, fontSize: 11, fontWeight: 600, color: freshExit === "Fresh" ? "green" : "red", backgroundColor: freshExit === "Fresh" ? "#f0fff0" : "#fff0f0", padding: "2px 4px", borderRadius: 4 }}>{freshExit}</span>}
                   </td>
 
-                  <td style={{ position: "sticky", left: 0, zIndex: 4, backgroundColor: "#fff", fontSize: 12, padding: "4px 8px", width: 60, whiteSpace: "nowrap", borderRight: "2px solid #ccc", transform: `translateX(${scrollLeft > 0 ? -Math.min(scrollLeft, 60) : 0}px)`, transition: "transform 0.2s" }}>
+                  <td style={{ position: "sticky", left: 0, zIndex: 4, backgroundColor: "#fff", fontSize: 12, padding: "4px 8px", width: 60, whiteSpace: "nowrap", borderRight: "2px solid #ccc", transform: `translateX(${scrollLeft > 0 ? -Math.min(scrollLeft, 60) : 0}px)`, transition: "transform 0.2s", boxShadow: stickyShadow, willChange: "transform" }}>
                     {row.sector}
                   </td>
 
