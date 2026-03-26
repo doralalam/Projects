@@ -7,7 +7,7 @@ function MFTable({ type, title }) {
   const [details, setDetails] = useState({});
 
   useEffect(() => {
-    fetchMFTable(type).then(setData);
+    fetchMFTable(type).then(res => setData(res));
   }, [type]);
 
   const toggle = async (isin) => {
@@ -19,24 +19,38 @@ function MFTable({ type, title }) {
   };
 
   return (
-    <div>
+    <div style={{ marginBottom: 20 }}>
       <h3>{title}</h3>
-
-      <table border="1" width="100%">
+      <table border="1" width="100%" cellPadding="5" style={{ borderCollapse: "collapse" }}>
+        <thead style={{ backgroundColor: "#f2f2f2" }}>
+          <tr>
+            <th>Stock</th>
+            <th>Change</th>
+            <th>Type</th>
+            <th>Details</th>
+          </tr>
+        </thead>
         <tbody>
           {data.map(row => (
             <React.Fragment key={row.isin}>
               <tr>
                 <td>{row.stock}</td>
-                <td>{row.total_diff}</td>
-                <td><button onClick={() => toggle(row.isin)}>Toggle</button></td>
+                <td>{row.change}</td>
+                <td>{row.bucket}</td>
+                <td>
+                  <button onClick={() => toggle(row.isin)}>
+                    {expanded[row.isin] ? "Hide" : "Show"} Details
+                  </button>
+                </td>
               </tr>
 
               {expanded[row.isin] && (
                 <tr>
-                  <td colSpan="3">
+                  <td colSpan="4" style={{ backgroundColor: "#f9fafb", paddingLeft: 20 }}>
                     {(details[row.isin] || []).map((d, i) => (
-                      <div key={i}>{d.fund} - {d.diff}</div>
+                      <div key={i} style={{ marginBottom: 4 }}>
+                        {d.fund} ({d.amc}) - {d.change} ({d.bucket})
+                      </div>
                     ))}
                   </td>
                 </tr>

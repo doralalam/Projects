@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { fetchFundsList, fetchMomPivot } from "../api/api";
+import { fetchFundsList, fetchMomPivot, fetchDrilldown } from "../api/api";
 
 function FundTable() {
   const [amcOptions, setAmcOptions] = useState([]);
@@ -16,13 +16,14 @@ function FundTable() {
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    fetchFundsList().then(data => {
-      if (!data || typeof data !== "object") return;
-      setAmcOptions(Object.keys(data));
-      setFundOptions(data);
-      const firstAmc = Object.keys(data)[0];
+    fetchFundsList().then(res => {
+      if (!res || typeof res !== "object") return;
+      const amcs = Object.keys(res);
+      setAmcOptions(amcs);
+      setFundOptions(res);
+      const firstAmc = amcs[0];
       setAmc(firstAmc);
-      setFund(data[firstAmc][0]);
+      setFund(res[firstAmc][0]);
     });
   }, []);
 

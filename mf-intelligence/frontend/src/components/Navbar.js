@@ -1,21 +1,28 @@
 import React from "react";
 
 function Navbar({ page, setPage }) {
-  return (
-    <div className="navbar">
-      <div
-        className={`nav-item ${page === "home" ? "active" : ""}`}
-        onClick={() => setPage("home")}
-      >
-        Home
-      </div>
+  const pages = [
+    { key: "home", label: "Home" },
+    { key: "monthly", label: "Monthly Disclosures" }
+  ];
 
-      <div
-        className={`nav-item ${page === "monthly" ? "active" : ""}`}
-        onClick={() => setPage("monthly")}
-      >
-        Monthly Disclosures
-      </div>
+  return (
+    <div className="navbar" style={{ display: "flex", gap: 20, padding: 10 }}>
+      {pages.map(p => (
+        <div
+          key={p.key}
+          className={`nav-item ${page === p.key ? "active" : ""}`}
+          onClick={() => setPage(p.key)}
+          style={{
+            cursor: "pointer",
+            fontWeight: page === p.key ? "bold" : "normal",
+            borderBottom: page === p.key ? "2px solid #000" : "none",
+            padding: "5px 10px"
+          }}
+        >
+          {p.label}
+        </div>
+      ))}
     </div>
   );
 }
