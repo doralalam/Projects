@@ -26,9 +26,7 @@ data_collector = []
 
 def setup_logging():
     LOG_PATH.mkdir(parents=True, exist_ok=True)
-
     log_file = LOG_PATH / "quant_standardizer.log"
-
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",
@@ -81,7 +79,7 @@ def clean_numeric_columns(df):
             .str.strip()
         )
         df[col] = pd.to_numeric(df[col], errors="coerce")
-        df[col] = df[col].round(2)  # <-- round to 2 decimals
+        df[col] = df[col].round(2)  # round to 2 decimals
     return df
 
 
@@ -96,6 +94,16 @@ def clean_fund_name(fund_name):
     if not fund_name.endswith("Fund"):
         fund_name = fund_name + " Fund"
     return fund_name
+
+
+def clean_stock_name(name):
+    if pd.isna(name):
+        return None
+    # Strip unwanted characters from start and end; keep letters, numbers, spaces
+    name = re.sub(r'^[^a-zA-Z0-9 ]+|[^a-zA-Z0-9 ]+$', '', str(name).strip())
+    # Normalize multiple spaces to single space
+    name = " ".join(name.split())
+    return name
 
 
 def extract_metadata_from_filename(file_name):
@@ -122,10 +130,15 @@ def process_file(file_path):
     if "isin" not in df.columns:
         logging.warning(f"ISIN column missing -> {file_path}")
         return
+    # Keep only valid ISINs
     df = df[df["isin"].astype(str).str.match(r"^INE[A-Z0-9]{9}$", na=False)]
     df["sector"] = df["sector"].astype(str).str.strip()
     invalid_sectors = ["", "NA", "N.A.", "N A", "None", "nan"]
     df = df[~df["sector"].isin(invalid_sectors)]
+    
+    # Clean stock names
+    df["stock"] = df["stock"].apply(clean_stock_name)
+    
     fund, month, year = extract_metadata_from_filename(os.path.basename(file_path))
     required_cols = ["stock", "isin", "sector", "quantity", "market_value", "weight"]
     for col in required_cols:
