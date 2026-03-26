@@ -1,38 +1,71 @@
-.App {
-  text-align: center;
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f7f9fc;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.navbar {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 30px;
+  padding: 15px 30px;
+  background: #1e293b;
   color: white;
+  font-weight: 600;
 }
 
-.App-link {
-  color: #61dafb;
+.nav-item {
+  cursor: pointer;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.nav-item.active {
+  border-bottom: 2px solid #38bdf8;
+}
+
+.container {
+  padding: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th {
+  background: #f1f5f9;
+  padding: 8px;
+  text-align: left;
+}
+
+.table td {
+  padding: 6px;
+  border-bottom: 1px solid #eee;
+}
+
+.green {
+  color: green;
+}
+
+.red {
+  color: red;
+}
+
+.expand-btn {
+  margin-top: 10px;
+  cursor: pointer;
+  color: #2563eb;
+  font-size: 12px;
 }
