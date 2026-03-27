@@ -166,7 +166,7 @@ def main():
     process_all_files()
     update_master_dataset()
     print("\nExecution Summary")
-    print("------------------")
+    print("-------------------")
     print(f"Files processed: {files_processed}")
     print(f"Rows added: {rows_added}")
     print(f"Errors: {errors}")
