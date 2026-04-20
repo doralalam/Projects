@@ -9,4 +9,4 @@ engine = create_engine("postgresql+psycopg2://postgres:1234@localhost:5433/mf_in
 
 df.to_sql("amc_master", engine, if_exists="replace", index=False)
 
-print("Data uploaded to PostgreSQL successfully!")
+print("Data uploaded to PostgreSQL successfully!!")
