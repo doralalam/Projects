@@ -13,4 +13,4 @@ with engine.connect() as conn:
 
 df.to_sql("amc_master", engine, if_exists="append", index=False)
 
-print("Data uploaded to PostgreSQL successfully!!!")
+print("Data uploaded to PostgreSQL successfully!!")
